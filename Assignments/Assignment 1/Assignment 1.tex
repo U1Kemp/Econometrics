@@ -324,10 +324,10 @@ $x_{i} = (1,\text{WomenEduc}_{i},\text{WomenExp}_{i}, \text{WomenAge}_{i}, \text
 
 The corresponding likelihood function for the Tobit Model is:
 \begin{align*}
-    \ell(\beta;y) &= \prod_{i : y_i = 0} Pr(y_i = 0) \prod_{i : y_i > 0} \frac{1}{\sigma}\phi(\frac{y_i - x'_i\beta}{\sigma}) \\
+    \ell(\beta, \sigma^2 ;y) &= \prod_{i : y_i = 0} Pr(y_i = 0) \prod_{i : y_i > 0} \frac{1}{\sigma}\phi(\frac{y_i - x'_i\beta}{\sigma}) \\
     &= \prod_{i : y_i = 0} Pr(z_i \leq 0) \prod_{i : y_i > 0} \frac{1}{\sigma} \phi(\frac{y_i - x'_i\beta}{\sigma}) \\
     &= \prod_{i : y_i = 0} Pr(\frac{\epsilon_i}{\sigma} \leq -\frac{x'_i\beta}{\sigma}) \prod_{i : y_i > 0} \frac{1}{\sigma} \phi(\frac{y_i - x'_i\beta}{\sigma}) \\
-    \Rightarrow \ell(\beta;y) &= \prod_{i : y_i = 0} \Phi (\frac{-x'_i\beta}{\sigma}) \prod_{i : y_i > 0} \frac{1}{\sigma} \phi(\frac{y_i - x'_i\beta}{\sigma}) & \text{[as $\epsilon_i \sim  N(0,\sigma^2)$, $\frac{\epsilon_i}{\sigma} \sim N(0,1)$ ]}
+    \Rightarrow \ell(\beta, \sigma^2 ;y) &= \prod_{i : y_i = 0} \Phi (\frac{-x'_i\beta}{\sigma}) \prod_{i : y_i > 0} \frac{1}{\sigma} \phi(\frac{y_i - x'_i\beta}{\sigma}) & \text{[as $\epsilon_i \sim  N(0,\sigma^2)$, $\frac{\epsilon_i}{\sigma} \sim N(0,1)$ ]}
 \end{align*}
 
 \subsection*{(d)}
