@@ -1,0 +1,387 @@
+\documentclass[a4paper]{article}
+\usepackage[a4paper, top=1in, left=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{booktabs} % For table resizing
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Econometrics Homework 1}
+\lhead{Utpalraj Kemprai}
+
+\cfoot{\thepage}
+
+\begin{document}
+
+\title{Econometrics Homework 1}
+\author{Utpalraj Kemprai \\
+MDS202352}
+\date{\today}
+
+\maketitle
+
+\newpage
+
+\section*{Question 1}
+\subsection*{(a)}
+
+We have the binary logit model expressed in terms of a continuous
+latent random variable $z_{i}$ as 
+\[
+    z_{i} = x'_{i}\beta + \epsilon_{i}, \forall i = 1, \cdots, n
+\] 
+
+ \[
+y_{i} =
+\begin{cases} 
+1 & \text{if } z_{i} > 0, \\
+0 & \text{otherwise}
+\end{cases}
+\] 
+
+where $\epsilon_{i} \sim L(0,\frac{\pi^2}{3})$ , here $L$ denotes a logistic distribution with mean 0 and variance $\frac{\pi^2}{3}$
+and variance
+
+\vspace{4pt}
+Therefore the probability of success
+\begin{align*}
+     Pr(y_{i} = 1) &= Pr(z_{i} > 0) = Pr(x'_{i}\beta + \epsilon_{i} > 0) \\
+    &= Pr(\epsilon_{i} > - x'_{i}\beta) \\
+    &= 1 - Pr(\epsilon_{i} \leq - x'_{i}\beta) \\
+    &= 1 - \frac{1}{1 + e^{- (-x'_{i}\beta)}} & \text{[using the fact $\epsilon_{i} \sim L(0, \frac{\pi^2}{3})$ ]} \\
+    &= \frac{e^{x'_{i}\beta}}{ 1+ e^{{x'_{i}\beta}}}
+\end{align*}
+
+\subsection*{(b)}
+The likelihood for a binary model expressed as a function of $\beta$ is
+
+\[
+    \ell (\beta;y) = \prod_{i=1}^{n} ({Pr(y_{i}=0)I(y_{i} = 0) + Pr(y_{i}=1)I(y_{i} = 1)})
+\]
+
+where $I(.)$ is an indicator function.
+
+From part (a) of question 1, we have 
+
+\[
+    Pr(y_{i}=1) = \frac{e^{x'_{i}\beta}}{ 1+ e^{x'_{i}\beta}}
+\]  
+
+and 
+\[
+    Pr(y_{i}=0) = 1 - Pr(y_{i} = 1) =\frac{1}{ 1+ e^{x'_{i}\beta}}
+\] 
+
+So the likelihood function of the Logit model is,
+\[
+    \ell (\beta;y) = \prod_{i=1}^{n}  ( \frac{1}{ 1+ e^{x'_{i}\beta}}I(y_{i} = 0) + \frac{e^{x'_{i}\beta}}{ 1+ e^{x'_{i}\beta}}I(y_{i} = 1) )
+\]
+
+\subsection*{(c)}
+
+Here the dependent variable is the probability that the subject dies before age 65, and the primary explanatory variable of interest is whether the person smoked (at all) in the years prior to age 65.
+
+And the latent equation is, 
+\[ 
+    z_{i}  = \beta_{1} + \text{Smoke}_{2i}\beta_{\text{Smoke}} + x_{3i}\beta_{2} + \cdots + x_{ki}\beta_{k} + \epsilon_{i}
+\]
+
+where $\text{Smoke}_{2i}$ is an indicator for smoking status 
+
+\vspace{4pt}
+The odds of mortality by age 65 for an individual i are:
+
+\vspace{4pt}
+\textbf{Case 1:} individual i was a smoker (\(\text{Smoke}_{2i} = 1\))
+\begin{align*}
+    \text{Odds}_{\text{Smoker}} &= \frac{Pr(y_{i} = 1 | \text{Smoke}_{2i}=1)}{1-Pr(y_{i} = 1 | \text{Smoke}_{2i}=1)}\\
+     &= \frac{Pr(z_{i} > 0 | \text{Smoke}_{2i}=1)}{1-Pr(z_{i} > 0 | \text{Smoke}_{2i}=1)} \\
+    &= \frac{Pr(\epsilon_{i} > - (\beta_{1} + \beta_{\text{Smoke}} + x_{3i}\beta_{2} + \cdots + x_{ki}\beta_{k}))}{1-Pr(\epsilon_{i} > - (\beta_{1} + \beta_{\text{Smoke}} + x_{3i}\beta_{2} + \cdots + x_{ki}\beta_{k}))} \\
+    &= \frac{1-Pr(\epsilon_{i} \leq - (\beta_{1} + \beta_{\text{Smoke}} + x_{3i}\beta_{2} + \cdots + x_{ki}\beta_{k}))}{Pr(\epsilon_{i} \leq - (\beta_{1} + \beta_{\text{Smoke}} + x_{3i}\beta_{2} + \cdots + x_{ki}\beta_{k}))} \\
+    &= \frac{1 - \frac{1}{1+e^{(\beta_{1} + \beta_{\text{Smoke}} + x_{3i}\beta_{2} + \cdots + x_{ki}\beta_{k})}}}{\frac{1}{1+e^{(\beta_{1} + \beta_{\text{Smoke}} + x_{3i}\beta_{2} + \cdots + x_{ki}\beta_{k})}}} & \text{[using the fact $\epsilon_{i} \sim L(0, \frac{\pi^2}{3})$ ]}\\
+    &= e^{(\beta_{1} + \beta_{\text{Smoke}} + x_{3i}\beta_{2} + \cdots + x_{ki}\beta_{k})}
+\end{align*}
+
+\textbf{Case 2:} individual i was a nonsmoker (\(\text{Smoke}_{2i} = 0\))
+\begin{align*}
+    \text{Odds}_{\text{NonSmoker}} &= 
+    \frac{Pr(y_{i} = 1 | \text{Smoke}_{2i}=0)}{1-Pr(y_{i} = 1 | \text{Smoke}_{2i}=0)}\\ 
+    &=  \frac{Pr(z_{i} > 0 | \text{Smoke}_{2i}=0)}{1-Pr(z_{i} > 0 | \text{Smoke}_{2i}=0)}\\
+    &= \frac{Pr(\epsilon_{i} > - (\beta_{1}  + x_{3i}\beta_{2} + \cdots + x_{ki}\beta_{k}))}{1-Pr(\epsilon_{i} > - (\beta_{1}  + x_{3i}\beta_{2} + \cdots + x_{ki}\beta_{k}))} \\
+    &= \frac{1-Pr(\epsilon_{i} \leq - (\beta_{1} + x_{3i}\beta_{2} + \cdots + x_{ki}\beta_{k}))}{Pr(\epsilon_{i} \leq - (\beta_{1} + x_{3i}\beta_{2} + \cdots + x_{ki}\beta_{k}))} \\
+    &= \frac{1 - \frac{1}{1+e^{(\beta_{1} + x_{3i}\beta_{2} + \cdots + x_{ki}\beta_{k})}}}{\frac{1}{1+e^{(\beta_{1}  + x_{3i}\beta_{2} + \cdots + x_{ki}\beta_{k})}}} & \text{[using the fact $\epsilon_{i} \sim L(0, \frac{\pi^2}{3})$ ]}\\
+    &= e^{(\beta_{1} + x_{3i}\beta_{2} + \cdots + x_{ki}\beta_{k})}
+\end{align*}
+
+The log-odds ratio of mortality for a smoker vs nonsmoker is:
+\begin{align*}
+    \text{log-odds ratio} &= \ln ( \frac{\text{Odds}_{\text{Smoker}}}{\text{Odds}_{\text{NonSmoker}}} ) \\
+    &= \ln (\frac{e^{(\beta_{1} + \beta_{\text{Smoke}} + x_{3i}\beta_{2} + \cdots + x_{ki}\beta_{k})}}{e^{(\beta_{1} + x_{3i}\beta_{2} + \cdots + x_{ki}\beta_{k})}}) \\
+    &= \ln (e^{\beta_{\text{Smoke}}}) \\
+    &= \beta_{\text{Smoke}}
+\end{align*}
+
+
+\pagebreak
+\section*{Question 2}
+
+\subsection*{(a)}
+
+The variables in the model are as follows:
+
+\begin{itemize}
+    \item Discrete : cars, intercept, depend
+    \item Continuous : dcost, dovtt, divtt
+\end{itemize}
+
+\subsubsection*{Descriptive summary of continuous variables}
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|ccc|}
+    \hline
+    \textbf{Variable}   & \textbf{Mean} & \textbf{Standard Deviation} \\ \hline
+    dcost       & -12.94          & 37.97      \\ %\hline
+    dovtt       & 12.85         &   10.06              \\ %\hline
+    divtt       & 17.05        & 17.96             \\ \hline
+    \end{tabular}
+    \caption{Descriptive summary of continuous variables}
+    \label{tab:Descriptive summary of continuous variables}
+    \end{table}
+
+\subsubsection*{Descriptive summary of discrete variables}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+    cars & \textbf{Count} & \textbf{Percentage (\%)} \\ \hline
+    0    & 81    & 9.620           \\ %\hline
+    1    & 359   & 42.637          \\ %\hline
+    2    & 322   & 38.242          \\ %\hline
+    3    & 64    & 7.601           \\ %\hline
+    4    & 12    & 1.425           \\ %\hline
+    5    & 3     & 0.356           \\ %\hline
+    7    & 1     & 0.119           \\ \hline
+    \end{tabular}
+    \caption{cars Count and Percentage}
+    \label{tab:cars_count}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+    depend & \textbf{Count} & \textbf{Percentage (\%)} \\ \hline
+    0    & 135   & 16.03      \\ %\hline
+    1    & 707   & 83.97          \\ \hline
+    \end{tabular}
+    \caption{depend Count and Percentage}
+    \label{tab:depend_count}
+\end{table}
+
+\subsection*{(b)}
+We now estimate the Probit and Logit models by regressing the dependent variable depend on intercept, dcost, cars, dovtt and divtt.
+
+\pagebreak 
+\subsubsection*{Regression Coefficients: Estimate and Standard errors}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|ccc|}
+    \hline
+    \textbf{}   & \textbf{Estimate} & \textbf{Standard Error} \\ \hline
+    (Intercept) & -1.222             & 0.304            \\ %\hline
+    DCOST       & 0.017           & 0.004       \\ %\hline
+    CARS        & 2.308          & 0.226        \\ %\hline
+    DOVTT       & 0.062         &   0.019                \\ %\hline
+    DIVTT       & 0.009           & 0.009                  \\ \hline
+    \end{tabular}
+    \caption{Regression Coefficients for Logit Model}
+    \label{tab:table1}
+    \end{table}
+
+\begin{table}[h!]
+        \centering
+        \begin{tabular}{|ccc|}
+        \hline
+        \textbf{}   & \textbf{Estimate} & \textbf{Standard Error} \\ \hline
+        (Intercept) & -0.601             & 0.166           \\ %\hline
+        DCOST       & 0.010           & 0.002       \\ %\hline
+        CARS        & 1.225          & 0.114       \\ %\hline
+        DOVTT       & 0.032        &   0.010               \\ %\hline
+        DIVTT       & 0.005           & 0.005                  \\ \hline
+        \end{tabular}
+        \caption{Regression Coefficients for Probit Model}
+        \label{tab:table2}
+\end{table}
+
+\subsubsection*{Interpretation of the coefficient of cars}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|ccccc|}
+        \hline
+        \textbf{Model} & \textbf{Estimate} & \textbf{Std. Error} & \textbf{z value}& \textbf{Pr($>|z|$)} \\ \hline
+        Probit & 1.225 & 0.114 & 10.75 & $<$ $2e^{-16}$ \\
+        Logit & 2.308 & 0.226 & 10.21 & $<$ $2e^{-16}$ \\ \hline
+    \end{tabular}
+    \caption{Coefficient of cars for Probit and Logit Model}
+    \label{tab:cars coeff}
+\end{table}
+
+\begin{itemize}
+    \item \textbf{Probit:}
+    
+    The p-value for the coefficient of cars is less than $2^{-16}$, so the coefficient is significant. The coefficient is positive with a value of 1.225, so people with more cars are more likely to choose automobile than transit. More precisely, a unit increase in the number of cars owned will result in an increase of 1.225 in the log-odds.
+
+    \item \textbf{Logit:}
+    
+    The p-value for the coefficient of cars for the Logit model is also less than $2^{-16}$, so it is also significant. The coefficient is positive with a value of 2.308. So in the Logit model, cars have a greater impact for choosing automobile than the Probit model. As was the case with Probit model, people with more cars more likely to choose automobile than transit. A unit increase in the number of cars owned will result in an increase of 2.308 in the log-odds.
+\end{itemize}
+
+
+\subsection*{(c)}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|ccccc|}
+        \hline
+        \textbf{Model} & \textbf{AIC} & \textbf{BIC} & \textbf{log-likelihood}& \textbf{Hit-rate} \\ \hline
+        Probit & 470.33 & 494.00 & -230.16 & 0.9038 \\
+        Logit & 465.74 & 489.42 & -227.87 & 0.9038 \\ \hline
+    \end{tabular}
+    \caption{AIC,BIC,log-likelihood and Hit-rate for the models}
+    \label{tab:model metrics}
+\end{table}
+
+
+\pagebreak
+\section*{Question 3}
+\subsection*{(a)}
+
+\subsubsection*{Descriptive summary of variables}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|ccc|}
+    \hline
+    \textbf{}   & \textbf{Mean} & \textbf{Standard Deviation} \\ \hline
+     WHRS       & 740.58        & 871.31           \\ %\hline
+     WomenEduc  & 12.29         & 2.28      \\ %\hline
+     WomenExp   & 10.63         & 8.07       \\ %\hline
+     WomenAge   & 42.54         & 8.07               \\ %\hline
+     childl6    & 0.24         & 0.52                  \\ \hline
+    \end{tabular}
+    \caption{Descriptive summary of variables of interest}
+    \label{tab:summary statistics}
+\end{table}
+
+
+\subsection*{(b)}
+\subsubsection*{Linear Regression on only positive values of WHRS}
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|cccc|}
+    \hline
+    \textbf{}   & \textbf{Estimate} & \textbf{Std. Error} & \textbf{t-value} \\ \hline
+     (Intercept) &     1829.75    &     292.54      & 6.25      \\ %\hline
+     WomenEduc  &      -16.46      &       15.58       &  -1.06  \\ %\hline
+     WomenExp   &      33.94     &        5.01        & 6.77     \\ %\hline
+     WomenAge   &      -17.11     &       5.46       & -3.13     \\ %\hline
+     childl6    &       -305.31   &       96.45    & -3.17     \\ \hline
+    \end{tabular}
+    \caption{Linear Regression model on only positive values of WHRS }
+    \label{tab:Linear Regression}
+\end{table}
+
+\subsubsection*{Linear Regression framework is not appropriate }
+The linear regression model is not suitable for work hours because work hours data are censored (many people work zero hours), which violates the assumptions of linear regression. Linear regression assumes continuous, unbounded data, while work hours are bounded (cannot be negative) and may exhibit zero-inflation (many people working zero hours). The Tobit model is specifically designed for censored data and can handle these issues, making it a better choice for modeling work hours.
+
+
+\subsection*{(c)}
+
+\subsubsection*{Tobit model and corresponding likelihood}
+
+The Tobit model is:
+\begin{align*}
+    z_{i} &= \beta_{1} + \text{WomenEduc}_{i}\beta_{2} + \text{WomenExp}_{i}\beta_{3} + \text{WomenAge}_{i}\beta_{4} + \text{childl6}_{i}\beta_{5} + \epsilon_{i}, \forall i = 1, \cdots, 753  \\
+    &= x'_{i} \beta + \epsilon_{i}, \forall i = 1, \cdots, 753 \\
+    y_{i} &= \text{WHRS}_{i} =
+\begin{cases} 
+z_{i} & \text{if } z_{i} > 0, \\
+0 & \text{otherwise}
+\end{cases}
+\end{align*}
+
+where, 
+
+$\epsilon_{i} \sim N(0, \sigma^2)$, $\beta = (\beta_{1}, \beta_{2},\beta_{3},\beta_{4},\beta_{5})'$,
+$x_{i} = (1,\text{WomenEduc}_{i},\text{WomenExp}_{i}, \text{WomenAge}_{i}, \text{childl6}_i)'$
+\vspace{4pt}
+
+The corresponding likelihood function for the Tobit Model is:
+\begin{align*}
+    \ell(\beta;y) &= \prod_{i : y_i = 0} Pr(y_i = 0) \prod_{i : y_i > 0} \frac{1}{\sigma}\phi(\frac{y_i - x'_i\beta}{\sigma}) \\
+    &= \prod_{i : y_i = 0} Pr(z_i \leq 0) \prod_{i : y_i > 0} \frac{1}{\sigma} \phi(\frac{y_i - x'_i\beta}{\sigma}) \\
+    &= \prod_{i : y_i = 0} Pr(\frac{\epsilon_i}{\sigma} \leq -\frac{x'_i\beta}{\sigma}) \prod_{i : y_i > 0} \frac{1}{\sigma} \phi(\frac{y_i - x'_i\beta}{\sigma}) \\
+    \Rightarrow \ell(\beta;y) &= \prod_{i : y_i = 0} \Phi (\frac{-x'_i\beta}{\sigma}) \prod_{i : y_i > 0} \frac{1}{\sigma} \phi(\frac{y_i - x'_i\beta}{\sigma}) & \text{[as $\epsilon_i \sim  N(0,\sigma^2)$, $\frac{\epsilon_i}{\sigma} \sim N(0,1)$ ]}
+\end{align*}
+
+\subsection*{(d)}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|cccc|}
+    \hline
+    \textbf{}   & \textbf{Estimate} & \textbf{Std. Error} & \textbf{z-value} \\ \hline
+     (Intercept) &     1349.88    &     386.30      & 3.49      \\ %\hline
+     WomenEduc  &      73.29      &       20.47       & 3.58      \\ %\hline
+     WomenExp   &      80.54      &        6.29        & 12.81     \\ %\hline
+     WomenAge   &      -60.77     &       6.89       & -8.82     \\ %\hline
+     childl6    &       -918.92   &       111.66    & -8.23     \\ \hline
+    \end{tabular}
+    \caption{Tobit model summary}
+    \label{tab:Tobit}
+\end{table}
+
+\subsubsection*{Effect each variable on the response variable}
+\begin{itemize}
+    \item WomenEduc: 
+    
+    The positive coefficient suggests that an additional year of education for women is associated with an increase of approximately 73.29 units in the latent work hours variable. The z-value (3.58) indicates this effect is statistically significant.
+
+    \item WomenAge:
+
+    The negative coefficient indicates that as women age, their latent work hours decrease by about 60.77 units per year in the latent work hours variable. This effect is statistically significant (z-value = -8.82), suggesting a strong relationship between age and work hours.
+
+    \item WomenExp:
+    
+    The positive and significant coefficient implies that each additional year of work experience for women increases their latent work hours by about 80.54 units. The very high z-value (12.81) highlights strong statistical significance.
+
+    \item childl6:
+    
+    The large negative coefficient implies that having a child under the age of 6 is associated with a significant reduction in latent work hours, by approximately 918.92 units. This effect is highly significant (z-value = -8.23), reflecting the substantial impact of childcare responsibilities on women's work hours.
+
+\end{itemize}
+
+\subsection*{(e)}
+\subsubsection*{Marginal Effect of another year of education on observed hours of work}
+
+The marginal effect of year of education on observed hours of work is evaluated as:
+
+\[
+    \left. \frac{\partial E(\text{WHRS}_p|x_p)}{\partial \text{WomenEduc}} \right| z_p > 0 = \beta_{2} \Phi (\frac{\bar{x}'_p \beta}{\sigma})
+\]
+
+Setting WomenEduc, WomenExp, and WomenAge at the corresponding mean values and childl6 = 1, and inputting the value of $\beta$ and $\sigma$ obtained from the Tobit model in the above equation we get:
+
+\[
+    \left. \frac{\partial E(\text{WHRS}_p|x_p)}{\partial \text{WomenEduc}} \right| z_p > 0 = 26.6
+\]
+
+
+
+\end{document}
