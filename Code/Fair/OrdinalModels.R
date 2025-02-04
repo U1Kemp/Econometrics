@@ -33,7 +33,8 @@ library(erer)
 ##############################################################################
 # Data on marital happiness and affairs
 # Documentation: https://vincentarelbundock.github.io/Rdatasets/doc/Ecdat/Fair.html
-mar <- read.csv('/Users/arshadrahman/Library/CloudStorage/Dropbox/1-WorkFiles/1 CMI/Econometrics/R Codes/Ordinal Model/Fair.csv')
+# mar <- read.csv('/Users/arshadrahman/Library/CloudStorage/Dropbox/1-WorkFiles/1 CMI/Econometrics/R Codes/Ordinal Model/Fair.csv')
+mar <- read.csv('Fair.csv')
 
 # See how various factors predict marital happiness
 OrdLogistic <- polr(factor(rate) ~ age + child + religious + education + nbaffairs,
