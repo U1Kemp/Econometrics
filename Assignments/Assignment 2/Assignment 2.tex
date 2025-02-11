@@ -41,6 +41,8 @@ $\beta$ is a $k\times1$ vector of unknown parameters, and $n$ denotes the number
 
 \subsection*{(a)}
 
+\subsubsection*{Probability of success}
+
 We assume that $\epsilon_i \sim N(0,1)$, for $i = 1,2,\cdots, n$. Therefore we have,\\
 The probability of success,
 \begin{align*}
@@ -49,6 +51,9 @@ The probability of success,
                 &= Pr(\gamma_{j-1} - x'_{i}\beta < \epsilon_{i} \leq \gamma_j - x'_{i}\beta)\\
                 &= \Phi(\gamma_j - x'_{i}\beta) - \Phi(\gamma_{j-1} - x'_{i}\beta) &[\text{where } \Phi(\cdot) \text{ is the cdf of }N(0,1) ]
 \end{align*}
+
+\subsubsection*{Likelihood function}
+
 The likelihood function for the ordinal probit model is,
 \begin{align*}
     L(\beta,\gamma;y) &= \prod_{i=1}^{n}\prod_{j=1}^{J} Pr(y_i = j | \beta,\gamma)^{I(y_i = j)} &[\text{where } I(\cdot) \text{ is the indicator function}]\\
@@ -56,6 +61,8 @@ The likelihood function for the ordinal probit model is,
 \end{align*}
 
 \subsection*{(b)}
+
+\subsubsection*{Probability of success}
 
 We assume that $\epsilon_i \sim \mathcal{L}(0,1)$, for $i = 1,2, \cdots, n$. Therefore the probability of success,
 \begin{align*}
@@ -66,10 +73,62 @@ We assume that $\epsilon_i \sim \mathcal{L}(0,1)$, for $i = 1,2, \cdots, n$. The
                 &= \frac{e^{-(\gamma_{j-1} - x'_{i}\beta)} - e^{-(\gamma_{j} - x'_{i}\beta)}}{(1+e^{-(\gamma_j - x'_{i}\beta)})(1+e^{-(\gamma_{j-1} - x'_{i}\beta)})} \\
                 &= \frac{e^{x'_i\beta}(e^{-\gamma_{j-1}} - e^{-\gamma_{j}})}{(1+e^{-(\gamma_j - x'_{i}\beta)})(1+e^{-(\gamma_{j-1} - x'_{i}\beta)})} 
 \end{align*}
+
+\subsubsection*{Likelihood function}
+
 The likelihood function for the ordinal logit model is,
 \begin{align*}
-    L(\beta,\gamma;y) &= \prod_{i=1}^{n}\prod_{j=1}^{J} Pr(y_i = j | \beta,\gamma)^{I(y_i = j)} \\
-                      &=\prod_{i=1}^{n}\prod_{j=1}^{J} [\frac{e^{x'_i\beta}(e^{-\gamma_{j-1}} - e^{-\gamma_{j}})}{(1+e^{-(\gamma_j - x'_{i}\beta)})(1+e^{-(\gamma_{j-1} - x'_{i}\beta)})}]^{I(y_i = j)}
+    L(\beta,\gamma;y) &= \prod_{i=1}^{n}\prod_{j=1}^{J} Pr(y_i = j | \beta, \gamma)^{I(y_i = j)} &[\text{where } I(\cdot) \text{ is the indicator function}]\\
+                      &=\prod_{i=1}^{n}\prod_{j=1}^{J} [\frac{e^{x'_i\beta}(e^{-\gamma_{j-1}} - e^{-\gamma_{j}})}{(1+e^{-(\gamma_j - x'_{i}\beta)})(1+e^{-(\gamma_{j-1} - x'_{i}\beta)})}]^{I(y_i = j)} 
 \end{align*}
 
+\subsection*{(c)}
+
+\subsubsection*{Probability remain unchanged on adding a constant c to cut-points and the mean}
+
+Adding a constant $c$ to the cut-point $\gamma_j$ and the mean $x'_i\beta$, $\forall i = 1,2, \cdots, n$ and $j = 1,2,\cdots, J$, the latent variable $z_i$ becomes $x'_i\beta + c + \epsilon_i$ and the cut-point $\gamma_j$ becomes $\gamma_j + c$
+
+The probability of $y_i$ taking the value $j$ is,
+\begin{align*}
+    Pr(y_i = j) &= Pr(\gamma_{j-1}+c < z_i \leq \gamma_j + c)\\
+                &= Pr(\gamma_{j-1}+c < x'_i\beta + c + \epsilon_i \leq \gamma_j + c)\\
+                &= Pr(\gamma_{j-1} - x'_i\beta  < \epsilon_i \leq \gamma_j - x'_i\beta ) \\
+                &= \Phi(\gamma_j - x'_i\beta) - \Phi(\gamma_{j-1} - x'_i\beta)
+\end{align*}
+which is the same as the value obtained in part(a) of Question 1. So adding a constant c to the cut-point $\gamma_j$ and the mean $x'_i\beta$ does not change the outcome probability.
+
+\subsubsection*{Identification Problem}
+This identification problem can be solved by fixing the value of one of $\gamma_1, \gamma_2, \cdots, \gamma_{J-1}$. In particular setting $\gamma_1 = 0$ will solve this identification problem.
+
+\subsection*{(d)}
+
+\subsubsection*{Rescaling the parameters $(\gamma_j,\beta)$ and scale of distribution does not change outcome probability}
+
+Rescaling the parameters $(\gamma_j,\beta)$ and the scale of the distribution of $\epsilon_i$ by some constant $d$, the latent variable $z_i$ becomes $x'_id\beta + \epsilon_i$ where $\epsilon_i \sim N(0,d^2)$ and the cut-point $\gamma_j$ becomes $d\gamma_j, \forall j = 1, 2, \cdots, J-1$.
+
+The probability of $y_i$ taking the value $j$ is,
+\begin{align*}
+    Pr(y_i=j) &= Pr(d\gamma_{j-1} < z_i \leq d\gamma_j) \\
+              &= Pr(d\gamma_{j-1} < x'_i d\beta + \epsilon_i \leq d\gamma_j)\\
+              &= Pr(\gamma_{j-1} - x'_i\beta < \frac{\epsilon_i}{d} \leq \gamma_j - x'_i\beta)\\
+              &= \Phi(\gamma_j - x'_i\beta) - \Phi(\gamma_{j-1} - x'_i\beta) & [\text{as } \epsilon_i \sim N(0,d^2), \frac{\epsilon_i}{d} \sim N(0,1)]
+\end{align*}
+which is the same as the value obtained in part(b) of Question 1. So escaling the parameters $(\gamma_j,\beta)$ and the scale of the distribution by some arbitrary constant $d$ lead to same outcome probabilities.
+
+\subsubsection*{Identification problem}
+This identification problem can be solved by fixing the scale of the distribution of $\epsilon_i$. In particular we can set the scale of the distribution of $\epsilon_i$ to 1, i.e. var($\epsilon_i$) = 1.
+
+\subsection*{(e)}
+
+\subsubsection*{(i) Descriptive Summary of the data}
+
+
+\subsubsection*{(ii) Public opinion on extent of marijuana legalization}
+
+
+\subsubsection*{(iii) Covariate effects of the variables}
+
+
+\newpage
+\section*{Question 2}
 \end{document}
