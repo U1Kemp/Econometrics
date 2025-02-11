@@ -40,12 +40,36 @@ $\beta$ is a $k\times1$ vector of unknown parameters, and $n$ denotes the number
 \gamma_{J-1} < \gamma_J = \infty$ are the cut-points (or thresholds) and $y_i$ is assumed to have $J$ categories or outcomes.
 
 \subsection*{(a)}
-We assume that $\epsilon_i \sim N(0,1)$, for $i = 1,2,\cdots,n$. Therefore we have,
+
+We assume that $\epsilon_i \sim N(0,1)$, for $i = 1,2,\cdots, n$. Therefore we have,\\
+The probability of success,
 \begin{align*}
     Pr(y_i = j) &= Pr(\gamma_{j-1} < z_{i} \leq \gamma_j)\\
                 &= Pr(\gamma_{j-1} < x'_{i}\beta + \epsilon_{i} \leq \gamma_j) \\
                 &= Pr(\gamma_{j-1} - x'_{i}\beta < \epsilon_{i} \leq \gamma_j - x'_{i}\beta)\\
                 &= \Phi(\gamma_j - x'_{i}\beta) - \Phi(\gamma_{j-1} - x'_{i}\beta) &[\text{where } \Phi(\cdot) \text{ is the cdf of }N(0,1) ]
+\end{align*}
+The likelihood function for the ordinal probit model is,
+\begin{align*}
+    L(\beta,\gamma;y) &= \prod_{i=1}^{n}\prod_{j=1}^{J} Pr(y_i = j | \beta,\gamma)^{I(y_i = j)} &[\text{where } I(\cdot) \text{ is the indicator function}]\\
+                      &= \prod_{i=1}^{n}\prod_{j=1}^{J} (\Phi(\gamma_j - x'_{i}\beta) - \Phi(\gamma_{j-1} - x'_{i}\beta))^{I(y_i = j)}
+\end{align*}
+
+\subsection*{(b)}
+
+We assume that $\epsilon_i \sim \mathcal{L}(0,1)$, for $i = 1,2, \cdots, n$. Therefore the probability of success,
+\begin{align*}
+    Pr(y_i = j) &= Pr(\gamma_{j-1} < z_{i} \leq \gamma_j)\\
+                &= Pr(\gamma_{j-1} < x'_{i}\beta + \epsilon_{i} \leq \gamma_j) \\
+                &= Pr(\gamma_{j-1} - x'_{i}\beta < \epsilon_{i} \leq \gamma_j - x'_{i}\beta) \\
+                &= \frac{1}{1+e^{-(\gamma_j - x'_{i}\beta)}} - \frac{1}{1+e^{-(\gamma_{j-1} - x'_{i}\beta)}} & [\text{as } \epsilon_i \sim \mathcal{L}(0,1)] \\
+                &= \frac{e^{-(\gamma_{j-1} - x'_{i}\beta)} - e^{-(\gamma_{j} - x'_{i}\beta)}}{(1+e^{-(\gamma_j - x'_{i}\beta)})(1+e^{-(\gamma_{j-1} - x'_{i}\beta)})} \\
+                &= \frac{e^{x'_i\beta}(e^{-\gamma_{j-1}} - e^{-\gamma_{j}})}{(1+e^{-(\gamma_j - x'_{i}\beta)})(1+e^{-(\gamma_{j-1} - x'_{i}\beta)})} 
+\end{align*}
+The likelihood function for the ordinal logit model is,
+\begin{align*}
+    L(\beta,\gamma;y) &= \prod_{i=1}^{n}\prod_{j=1}^{J} Pr(y_i = j | \beta,\gamma)^{I(y_i = j)} \\
+                      &=\prod_{i=1}^{n}\prod_{j=1}^{J} [\frac{e^{x'_i\beta}(e^{-\gamma_{j-1}} - e^{-\gamma_{j}})}{(1+e^{-(\gamma_j - x'_{i}\beta)})(1+e^{-(\gamma_{j-1} - x'_{i}\beta)})}]^{I(y_i = j)}
 \end{align*}
 
 \end{document}
