@@ -1,0 +1,51 @@
+\documentclass[a4paper]{article}
+\usepackage[a4paper, top=1in, left=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{booktabs} % For table resizing
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Econometrics Homework 2}
+\lhead{Utpalraj Kemprai}
+
+\cfoot{\thepage}
+
+\begin{document}
+
+\title{Econometrics Homework 2}
+\author{Utpalraj Kemprai \\
+MDS202352}
+\date{\today}
+
+\maketitle
+
+\newpage
+
+\section*{Question 1}
+
+We have the following ordinal regression model:
+\begin{align*}
+    z_{i} &= x'_{i}\beta + \epsilon_{i} \quad \forall i = 1,\cdots,n \\
+    \gamma_{j-1} &< z_{i} \leq \gamma_{j} \implies y_{i} = j, \quad \forall i, j = 1, \cdots, J
+\end{align*}
+where (in the first equation) $z_i$ is the latent variable for individual $i$, $x_i$ is a  vector of covariates,
+$\beta$ is a $k\times1$ vector of unknown parameters, and $n$ denotes the number of observations. The second equation shows how $z_i$ is related to the observed discrete response $y_i$, where $-\infty = \gamma_0 < \gamma_1 <
+\gamma_{J-1} < \gamma_J = \infty$ are the cut-points (or thresholds) and $y_i$ is assumed to have $J$ categories or outcomes.
+
+\subsection*{(a)}
+We assume that $\epsilon_i \sim N(0,1)$, for $i = 1,2,\cdots,n$. Therefore we have,
+\begin{align*}
+    Pr(y_i = j) &= Pr(\gamma_{j-1} < z_{i} \leq \gamma_j)\\
+                &= Pr(\gamma_{j-1} < x'_{i}\beta + \epsilon_{i} \leq \gamma_j) \\
+                &= Pr(\gamma_{j-1} - x'_{i}\beta < \epsilon_{i} \leq \gamma_j - x'_{i}\beta)\\
+                &= \Phi(\gamma_j - x'_{i}\beta) - \Phi(\gamma_{j-1} - x'_{i}\beta) &[\text{where } \Phi(\cdot) \text{ is the cdf of }N(0,1) ]
+\end{align*}
+
+\end{document}
