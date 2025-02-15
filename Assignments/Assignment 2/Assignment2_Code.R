@@ -320,12 +320,183 @@ table_opinion
 #2 Not Legal    218   14.61126
 #3  Personal    634   42.49330
 #-----------------------------------------------------------------------------
-# ii) Analyze public opinion on extent marijuana legalization in the US i.e., estimate Model 8
+# Tolerant States
 #-----------------------------------------------------------------------------
+tolerant_states <- c("Alaska", "Arizona", "California", "Colorado", "Connecticut", 
+                     "Delaware", "Hawaii", "Illinois", "Maine", "Maryland", 
+                     "Massachusetts", "Michigan", "Montana", "Nevada", "New Hampshire", 
+                     "New Jersey", "New Mexico", "Oregon", "Rhode Island", "Vermont", 
+                     "Washington", "Washington DC", "District of Columbia")
 
-OrdLogistic <- polr(factor(q46) ~ log_age + log_income + factor(relig) + q57 + factor(educ2) +
-                      race3m1 + party + hh1 + q55 ,
-                    data = dummy_copy, 
-                    method = 'logistic' # change to 'probit' for ordered probit
+count_tol = 0
+for(state in tolerant_states){
+  count_tol = count_tol + sum(dummy_copy$state == state)
+}
+
+table_tol <- data.frame(
+  Variable = "Tolerant States",
+  Counts = count_tol,
+  Percentage = 100*count_tol/length(dummy_copy$state)
 )
-summary(OrdLogistic)
+table_tol
+#         Variable Counts Percentage
+#1 Tolerant States    556   37.26542
+#-----------------------------------------------------------------------------
+# (ii) Analyze public opinion on extent marijuana legalization in the US i.e., estimate Model 8
+#-----------------------------------------------------------------------------
+# Model 8
+# Prepare the variables for the model
+#-----------------------------------------------------------------------------
+# Intercept
+dummy_copy$intercept = rep(1,length(dummy_copy$q46))
+
+# Past Use
+dummy_copy$pastuse = dummy_copy$q57 == "Yes"
+
+# Male
+dummy_copy$male = dummy_copy$sex == "Male"
+
+# Education
+dummy_copy$bachelor_above = (dummy_copy$educ2 == "Postgraduate Degree") + (dummy_copy$educ2 == "Four year college") + (dummy_copy$educ2 == "Some Postgraduate")
+dummy_copy$below_bachelor = (dummy_copy$educ2 == 'Some College') + (dummy_copy$educ2 == "Associate Degree")
+dummy_copy$below_hs = (dummy_copy$educ2 == 'HS') + (dummy_copy$educ2 == 'Less than HS') + (dummy_copy$educ2 == 'HS Incomplete')
+
+# Tolerant state
+## function to check if a state is tolerant
+is_tolerant <- function(state){
+  if(sum(state == tolerant_states) == 1){
+    return(1)
+  }
+  else{
+    return(0)
+  }
+}
+## apply the function
+dummy_copy$tolerant_state = sapply(dummy_copy$state, is_tolerant)
+
+# Eventually legal
+dummy_copy$expected_legal = dummy_copy$q55 == "Yes, it will"
+
+# Race
+dummy_copy$black = dummy_copy$race3m1 == "Black or African-American"
+dummy_copy$white = dummy_copy$race3m1 == "White"
+dummy_copy$other_race = rep(1,length(dummy_copy$race3m1)) - dummy_copy$black - dummy_copy$white
+
+# Party Affiliation
+dummy_copy$democrat = dummy_copy$party == "Democrat"
+dummy_copy$republican = dummy_copy$party == "Republican"
+dummy_copy$other_party = rep(1,length(dummy_copy$party)) - dummy_copy$democrat - dummy_copy$republican
+
+# Religion
+dummy_copy$christian = dummy_copy$relig == "Christian (VOL.)"
+dummy_copy$roman_catholuc = dummy_copy$relig == "Roman Catholic (Catholic)"
+dummy_copy$protestant = dummy_copy$relig == "Protestant (Baptist, Methodist, Non-denominational, Lutheran, Presbyterian, Pentecostal, Episcopalian, Reformed, etc.)"
+dummy_copy$liberal = ((dummy_copy$relig == "Agnostic (not sure if there is a God)") 
+                      + (dummy_copy$relig == "Nothing in particular") 
+                      + (dummy_copy$relig == "Atheist (do not believe in God)") 
+                      + (dummy_copy$relig == "Unitarian (Universalist) (VOL.)"))
+dummy_copy$conservative = ((dummy_copy$relig == "Mormon (Church of Jesus Christ of Latter-day Saints/LDS)")
+                           + (dummy_copy$relig == "Jewish (Judaism)")
+                           + (dummy_copy$relig == "Hindu")
+                           + (dummy_copy$relig == "Buddhist")
+                           + (dummy_copy$relig == "Muslim (Islam)")
+                           + (dummy_copy$relig == "Orthodox (Greek, Russian, or some other orthodox church)"))
+
+# Opinion on Marijuana Legalization
+order_opinion <- function(opinion){
+  if(opinion == "notlegal"){
+    return(1)
+  }
+  else if(opinion == "medicinal"){
+    return(2)
+  }
+  else if(opinion == "personal"){
+    return(3)
+  }
+}
+## Apply the function
+dummy_copy$opinion = sapply(dummy_copy$q46,order_opinion)
+#-----------------------------------------------------------------------------
+# Estimate Model 8
+#-----------------------------------------------------------------------------
+OrdProbit <- polr(factor(opinion) ~ log_age + log_income + hh1 + pastuse + bachelor_above +
+                    below_bachelor + tolerant_state + expected_legal +
+                    black + other_race + democrat + other_party + male +
+                    christian + roman_catholuc + liberal + conservative,
+                    data = dummy_copy, Hess = TRUE,
+                    method = 'probit' # set to 'probit' for ordered probit
+)
+
+# get the coefficients
+coeftest(OrdProbit)
+
+# t test of coefficients:
+#   
+#                     Estimate Std. Error t value  Pr(>|t|)    
+# log_age            -0.354255   0.078488 -4.5135 6.884e-06 ***
+#   log_income          0.086380   0.035015  2.4670   0.01374 *  
+#   hh1                -0.020272   0.023174 -0.8748   0.38185    
+# pastuseTRUE         0.685678   0.064285 10.6662 < 2.2e-16 ***
+#   bachelor_above      0.240526   0.079949  3.0085   0.00267 ** 
+#   below_bachelor      0.048159   0.078118  0.6165   0.53767    
+# tolerant_state      0.068051   0.065381  1.0408   0.29812    
+# expected_legalTRUE  0.566664   0.073017  7.7607 1.569e-14 ***
+#   blackTRUE           0.025615   0.098506  0.2600   0.79488    
+# other_race         -0.275511   0.107530 -2.5622   0.01050 *  
+#   democratTRUE        0.440368   0.087511  5.0321 5.447e-07 ***
+#   other_party         0.364407   0.079980  4.5562 5.638e-06 ***
+#   maleTRUE            0.062537   0.062727  0.9970   0.31894    
+# christianTRUE       0.164217   0.102767  1.5979   0.11027    
+# roman_catholucTRUE  0.104086   0.087470  1.1900   0.23426    
+# liberal             0.390372   0.088889  4.3917 1.205e-05 ***
+#   conservative        0.091912   0.120986  0.7597   0.44756    
+# ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+#-----------------------------------------------------------------------------
+# The polr function in R, does not contain the intercept term by design
+# Also \gamma_1 = 0, convention is not followed either
+# The choice of intercept which sets \gamma_1 = 0, is the negative of 1|2
+# given by the polr function, i.e. 
+#-----------------------------------------------------------------------------
+intercept = -OrdProbit$zeta[1]
+intercept
+# 0.3453124
+
+#-----------------------------------------------------------------------------
+# the standard error of intercept will be the same as the standard error of
+# OrdProbit$zeta[1]
+
+# This choice of intercept will make the other cutoff point (\gamma_2) to be
+#-----------------------------------------------------------------------------
+cut_point = OrdProbit$zeta[2] - OrdProbit$zeta[1]
+cut_point
+# 2|3 
+# 1.464429 
+#-----------------------------------------------------------------------------
+# standard errors of the intercept and threshold
+se <- sqrt(diag(vcov(OrdProbit)))
+
+# se_thresholds has standard errors of 1|2 and 2|3
+se_thresholds <- se[names(se) %in% names(OrdProbit$zeta)]
+se_thresholds
+# 1|2       2|3 
+# 0.4801557 0.4807061 
+
+#-----------------------------------------------------------------------------
+# covariance of the original thresholds 1|2 and 2|3 
+cov12 = vcov(OrdProbit)[18,19] # as 1|2 and 2|3 are the 18th and 19th variable
+
+#-----------------------------------------------------------------------------
+# standard error of the intercept
+se_thresholds[1]
+# 0.4801557 
+
+# standard error of cut-point = se(2|3 - 1|2) = \sqrt(var(2|3) + var(1|2) - 2 cov(1|2,2|3))
+se_cut_point = sqrt(se_thresholds[2]^2 + se_thresholds[1]^2 - 2 * cov12)
+se_cut_point
+# 0.04950927 
+
+#-----------------------------------------------------------------------------
+# (iii) Covariate Effects for Variables
+#-----------------------------------------------------------------------------
