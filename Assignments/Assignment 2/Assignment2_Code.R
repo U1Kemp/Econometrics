@@ -341,6 +341,7 @@ table_tol <- data.frame(
 table_tol
 #         Variable Counts Percentage
 #1 Tolerant States    556   37.26542
+
 #-----------------------------------------------------------------------------
 # (ii) Analyze public opinion on extent marijuana legalization in the US i.e., estimate Model 8
 #-----------------------------------------------------------------------------
@@ -351,10 +352,10 @@ table_tol
 dummy_copy$intercept = rep(1,length(dummy_copy$q46))
 
 # Past Use
-dummy_copy$pastuse = dummy_copy$q57 == "Yes"
+dummy_copy$pastuse = (dummy_copy$q57 == "Yes") + 0
 
 # Male
-dummy_copy$male = dummy_copy$sex == "Male"
+dummy_copy$male = (dummy_copy$sex == "Male") + 0
 
 # Education
 dummy_copy$bachelor_above = (dummy_copy$educ2 == "Postgraduate Degree") + (dummy_copy$educ2 == "Four year college") + (dummy_copy$educ2 == "Some Postgraduate")
@@ -375,22 +376,22 @@ is_tolerant <- function(state){
 dummy_copy$tolerant_state = sapply(dummy_copy$state, is_tolerant)
 
 # Eventually legal
-dummy_copy$expected_legal = dummy_copy$q55 == "Yes, it will"
+dummy_copy$expected_legal = (dummy_copy$q55 == "Yes, it will") + 0
 
 # Race
-dummy_copy$black = dummy_copy$race3m1 == "Black or African-American"
-dummy_copy$white = dummy_copy$race3m1 == "White"
+dummy_copy$black = (dummy_copy$race3m1 == "Black or African-American") + 0
+dummy_copy$white = (dummy_copy$race3m1 == "White") + 0
 dummy_copy$other_race = rep(1,length(dummy_copy$race3m1)) - dummy_copy$black - dummy_copy$white
 
 # Party Affiliation
-dummy_copy$democrat = dummy_copy$party == "Democrat"
-dummy_copy$republican = dummy_copy$party == "Republican"
+dummy_copy$democrat = (dummy_copy$party == "Democrat") + 0 
+dummy_copy$republican = (dummy_copy$party == "Republican") + 0
 dummy_copy$other_party = rep(1,length(dummy_copy$party)) - dummy_copy$democrat - dummy_copy$republican
 
 # Religion
-dummy_copy$christian = dummy_copy$relig == "Christian (VOL.)"
-dummy_copy$roman_catholuc = dummy_copy$relig == "Roman Catholic (Catholic)"
-dummy_copy$protestant = dummy_copy$relig == "Protestant (Baptist, Methodist, Non-denominational, Lutheran, Presbyterian, Pentecostal, Episcopalian, Reformed, etc.)"
+dummy_copy$christian = (dummy_copy$relig == "Christian (VOL.)") + 0
+dummy_copy$roman_catholic = (dummy_copy$relig == "Roman Catholic (Catholic)") + 0
+dummy_copy$protestant = (dummy_copy$relig == "Protestant (Baptist, Methodist, Non-denominational, Lutheran, Presbyterian, Pentecostal, Episcopalian, Reformed, etc.)")
 dummy_copy$liberal = ((dummy_copy$relig == "Agnostic (not sure if there is a God)") 
                       + (dummy_copy$relig == "Nothing in particular") 
                       + (dummy_copy$relig == "Atheist (do not believe in God)") 
@@ -422,7 +423,7 @@ dummy_copy$opinion = sapply(dummy_copy$q46,order_opinion)
 OrdProbit <- polr(factor(opinion) ~ log_age + log_income + hh1 + pastuse + bachelor_above +
                     below_bachelor + tolerant_state + expected_legal +
                     black + other_race + democrat + other_party + male +
-                    christian + roman_catholuc + liberal + conservative,
+                    christian + roman_catholic + liberal + conservative,
                     data = dummy_copy, Hess = TRUE,
                     method = 'probit' # set to 'probit' for ordered probit
 )
@@ -432,34 +433,38 @@ coeftest(OrdProbit)
 
 # t test of coefficients:
 #   
-#                     Estimate Std. Error t value  Pr(>|t|)    
-# log_age            -0.354255   0.078488 -4.5135 6.884e-06 ***
+#                       Estimate Std. Error t value  Pr(>|t|)    
+#   log_age            -0.354255   0.078488 -4.5135 6.884e-06 ***
 #   log_income          0.086380   0.035015  2.4670   0.01374 *  
 #   hh1                -0.020272   0.023174 -0.8748   0.38185    
-# pastuseTRUE         0.685678   0.064285 10.6662 < 2.2e-16 ***
+#   pastuseTRUE         0.685678   0.064285 10.6662 < 2.2e-16 ***
 #   bachelor_above      0.240526   0.079949  3.0085   0.00267 ** 
 #   below_bachelor      0.048159   0.078118  0.6165   0.53767    
-# tolerant_state      0.068051   0.065381  1.0408   0.29812    
-# expected_legalTRUE  0.566664   0.073017  7.7607 1.569e-14 ***
+#   tolerant_state      0.068051   0.065381  1.0408   0.29812    
+#   expected_legalTRUE  0.566664   0.073017  7.7607 1.569e-14 ***
 #   blackTRUE           0.025615   0.098506  0.2600   0.79488    
-# other_race         -0.275511   0.107530 -2.5622   0.01050 *  
+#   other_race         -0.275511   0.107530 -2.5622   0.01050 *  
 #   democratTRUE        0.440368   0.087511  5.0321 5.447e-07 ***
 #   other_party         0.364407   0.079980  4.5562 5.638e-06 ***
 #   maleTRUE            0.062537   0.062727  0.9970   0.31894    
-# christianTRUE       0.164217   0.102767  1.5979   0.11027    
-# roman_catholucTRUE  0.104086   0.087470  1.1900   0.23426    
-# liberal             0.390372   0.088889  4.3917 1.205e-05 ***
+#   christianTRUE       0.164217   0.102767  1.5979   0.11027    
+#   roman_catholucTRUE  0.104086   0.087470  1.1900   0.23426    
+#   liberal             0.390372   0.088889  4.3917 1.205e-05 ***
 #   conservative        0.091912   0.120986  0.7597   0.44756    
-# ---
+#   ---
 #   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 #-----------------------------------------------------------------------------
+# Standard error of intercept and cut-point of Model 8
+#-----------------------------------------------------------------------------
+
 # The polr function in R, does not contain the intercept term by design
 # Also \gamma_1 = 0, convention is not followed either
 # The choice of intercept which sets \gamma_1 = 0, is the negative of 1|2
 # given by the polr function, i.e. 
 #-----------------------------------------------------------------------------
 intercept = -OrdProbit$zeta[1]
+names(intercept) = NULL
 intercept
 # 0.3453124
 
@@ -484,9 +489,10 @@ se_thresholds
 # 0.4801557 0.4807061 
 
 #-----------------------------------------------------------------------------
-# covariance of the original thresholds 1|2 and 2|3 
+# covariance of the original thresholds 1|2 and 2|3 of polr
 cov12 = vcov(OrdProbit)[18,19] # as 1|2 and 2|3 are the 18th and 19th variable
-
+cov12
+# 0.2295884
 #-----------------------------------------------------------------------------
 # standard error of the intercept
 se_thresholds[1]
@@ -494,9 +500,190 @@ se_thresholds[1]
 
 # standard error of cut-point = se(2|3 - 1|2) = \sqrt(var(2|3) + var(1|2) - 2 cov(1|2,2|3))
 se_cut_point = sqrt(se_thresholds[2]^2 + se_thresholds[1]^2 - 2 * cov12)
+names(se_cut_point) = NULL
 se_cut_point
 # 0.04950927 
 
 #-----------------------------------------------------------------------------
+# LR Statistic
+#----------------------------------------------------------------------------- 
+model_reduced = polr(factor(opinion)~1,
+                     data = dummy_copy, Hess = TRUE,
+                     method = 'probit')
+lr = -2*(logLik(model_reduced) - logLik(OrdProbit))
+lr
+# 'log Lik.' 377.0007 (df=2)
+
+#-----------------------------------------------------------------------------
+# McFadden R^2 
+#-----------------------------------------------------------------------------
+Rm = 1 - logLik(OrdProbit)/logLik(model_reduced)
+Rm
+# 'log Lik.' 0.1253671 (df=19)
+
+#-----------------------------------------------------------------------------
+# Hit Rate
+#-----------------------------------------------------------------------------
+predicted_classes = predict(OrdProbit,type = "class")
+hit_rate = mean(predicted_classes == dummy_copy$opinion)
+hit_rate*100
+# 58.91421
+
+#-----------------------------------------------------------------------------
 # (iii) Covariate Effects for Variables
+#-----------------------------------------------------------------------------
+# Age, 10 years
+# Income $ 10,000
+#-----------------------------------------------------------------------------
+betas = OrdProbit$coefficients
+betas
+# log_age     log_income            hh1        pastuse bachelor_above 
+# -0.35425503     0.08637971    -0.02027156     0.68567777     0.24052640 
+# below_bachelor tolerant_state expected_legal          black     other_race 
+# 0.04815898     0.06805104     0.56666363     0.02561470    -0.27551116 
+# democrat    other_party           male      christian roman_catholic 
+# 0.44036840     0.36440738     0.06253713     0.16421691     0.10408574 
+# liberal   conservative 
+# 0.39037183     0.09191198 
+X = dummy_copy[names(betas)]
+opinions = dummy_copy$opinion
+cut_points = c(-Inf,OrdProbit$zeta[1],OrdProbit$zeta[2],Inf)
+
+#-----------------------------------------------------------------------------
+# Covariate Effect of Age, 10 years
+#-----------------------------------------------------------------------------
+x_age1 = X
+x_age1[1:dim(X)[1],1] = log(exp(x_age1[1:dim(X)[1],1]) + 10)
+x_age0 = X
+# x_past_use0[1:dim(X)[1],1] = 0
+
+ce_age = rep(0,3)
+for(i in 1:3){
+  ce_age[i] = mean(pnorm(cut_points[i+1] - as.matrix(x_age1)%*%as.matrix(betas))-
+                     pnorm(cut_points[i] - as.matrix(x_age1)%*%as.matrix(betas)))- mean(pnorm(cut_points[i+1] - as.matrix(x_age0)%*%as.matrix(betas))-
+                                                                                          pnorm(cut_points[i] - as.matrix(x_age0)%*%as.matrix(betas)))
+}
+
+#-----------------------------------------------------------------------------
+# Covariate Effect of Income, $10000 
+#-----------------------------------------------------------------------------
+x_income1 = X
+x_income1[1:dim(X)[1],2] = log(exp(x_income1[1:dim(X)[1],2]) + 10000)
+x_income0 = X
+# x_past_use0[1:dim(X)[1],1] = 0
+
+ce_income = rep(0,3)
+for(i in 1:3){
+  ce_income[i] = mean(pnorm(cut_points[i+1] - as.matrix(x_income1)%*%as.matrix(betas))-
+                     pnorm(cut_points[i] - as.matrix(x_income1)%*%as.matrix(betas)))- mean(pnorm(cut_points[i+1] - as.matrix(x_income0)%*%as.matrix(betas))-
+                                                                                          pnorm(cut_points[i] - as.matrix(x_income0)%*%as.matrix(betas)))
+}
+
+#-----------------------------------------------------------------------------
+# Covariate Effect of Past Use
+#-----------------------------------------------------------------------------
+x_past_use1 = X
+x_past_use1[1:dim(X)[1],4] = 1
+x_past_use0 = X
+x_past_use0[1:dim(X)[1],4] = 0
+
+ce_pastuse = rep(0,3)
+for(i in 1:3){
+  ce_pastuse[i] = mean(pnorm(cut_points[i+1] - as.matrix(x_past_use1)%*%as.matrix(betas))-
+                         pnorm(cut_points[i] - as.matrix(x_past_use1)%*%as.matrix(betas)))- mean(pnorm(cut_points[i+1] - as.matrix(x_past_use0)%*%as.matrix(betas))-
+           pnorm(cut_points[i] - as.matrix(x_past_use0)%*%as.matrix(betas)))
+}
+
+#-----------------------------------------------------------------------------
+# Covariate Effect of Bachelor and Above
+#-----------------------------------------------------------------------------
+x_bachelorabove1 = X
+x_bachelorabove1[1:dim(X)[1],5] = 1
+x_bachelorabove0 = X
+x_bachelorabove0[1:dim(X)[1],5] = 0
+
+ce_bachelorabove = rep(0,3)
+for(i in 1:3){
+  ce_bachelorabove[i] = mean(pnorm(cut_points[i+1] - as.matrix(x_bachelorabove1)%*%as.matrix(betas))-
+                         pnorm(cut_points[i] - as.matrix(x_bachelorabove1)%*%as.matrix(betas)))- mean(pnorm(cut_points[i+1] - as.matrix(x_bachelorabove0)%*%as.matrix(betas))-
+                                                                                                   pnorm(cut_points[i] - as.matrix(x_bachelorabove0)%*%as.matrix(betas)))
+}
+
+#-----------------------------------------------------------------------------
+# Covariate Effect of Eventually Legal
+#-----------------------------------------------------------------------------
+x_event_legal1 = X
+x_event_legal1[1:dim(X)[1],8] = 1
+x_event_legal0 = X
+x_event_legal0[1:dim(X)[1],8] = 0
+
+ce_event_legal = rep(0,3)
+for(i in 1:3){
+  ce_event_legal[i] = mean(pnorm(cut_points[i+1] - as.matrix(x_event_legal1)%*%as.matrix(betas))-
+                               pnorm(cut_points[i] - as.matrix(x_event_legal1)%*%as.matrix(betas)))- mean(pnorm(cut_points[i+1] - as.matrix(x_event_legal0)%*%as.matrix(betas))-
+                                                                                                              pnorm(cut_points[i] - as.matrix(x_event_legal0)%*%as.matrix(betas)))
+}
+
+#-----------------------------------------------------------------------------
+# Covariate Effect of Other Races
+#-----------------------------------------------------------------------------
+x_other_race1 = X
+x_other_race1[1:dim(X)[1],10] = 1
+x_other_race0 = X
+x_other_race0[1:dim(X)[1],10] = 0
+
+ce_other_race = rep(0,3)
+for(i in 1:3){
+  ce_other_race[i] = mean(pnorm(cut_points[i+1] - as.matrix(x_other_race1)%*%as.matrix(betas))-
+                             pnorm(cut_points[i] - as.matrix(x_other_race1)%*%as.matrix(betas)))- mean(pnorm(cut_points[i+1] - as.matrix(x_other_race0)%*%as.matrix(betas))-
+                                                                                                          pnorm(cut_points[i] - as.matrix(x_other_race0)%*%as.matrix(betas)))
+}
+#-----------------------------------------------------------------------------
+# Covariate Effect of Democrat
+#-----------------------------------------------------------------------------
+x_democrat1 = X
+x_democrat1[1:dim(X)[1],11] = 1
+x_democrat0 = X
+x_democrat0[1:dim(X)[1],11] = 0
+
+ce_democrat = rep(0,3)
+for(i in 1:3){
+  ce_democrat[i] = mean(pnorm(cut_points[i+1] - as.matrix(x_democrat1)%*%as.matrix(betas))-
+                            pnorm(cut_points[i] - as.matrix(x_democrat1)%*%as.matrix(betas)))- mean(pnorm(cut_points[i+1] - as.matrix(x_democrat0)%*%as.matrix(betas))-
+                                                                                                        pnorm(cut_points[i] - as.matrix(x_democrat0)%*%as.matrix(betas)))
+}
+#-----------------------------------------------------------------------------
+# Covariate Effect of Other Party
+#-----------------------------------------------------------------------------
+x_other_party1 = X
+x_other_party1[1:dim(X)[1],12] = 1
+x_other_party0 = X
+x_other_party0[1:dim(X)[1],12] = 0
+
+ce_other_party = rep(0,3)
+for(i in 1:3){
+  ce_other_party[i] = mean(pnorm(cut_points[i+1] - as.matrix(x_other_party1)%*%as.matrix(betas))-
+                          pnorm(cut_points[i] - as.matrix(x_other_party1)%*%as.matrix(betas)))- mean(pnorm(cut_points[i+1] - as.matrix(x_other_party0)%*%as.matrix(betas))-
+                                                                                                    pnorm(cut_points[i] - as.matrix(x_other_party0)%*%as.matrix(betas)))
+}
+#-----------------------------------------------------------------------------
+# Covariate Effect of Liberal
+#-----------------------------------------------------------------------------
+x_liberal1 = X
+x_liberal1[1:dim(X)[1],16] = 1
+x_liberal0 = X
+x_liberal0[1:dim(X)[1],16] = 0
+
+ce_liberal = rep(0,3)
+for(i in 1:3){
+  ce_liberal[i] = mean(pnorm(cut_points[i+1] - as.matrix(x_liberal1)%*%as.matrix(betas))-
+                             pnorm(cut_points[i] - as.matrix(x_liberal1)%*%as.matrix(betas)))- mean(pnorm(cut_points[i+1] - as.matrix(x_liberal0)%*%as.matrix(betas))-
+                                                                                                          pnorm(cut_points[i] - as.matrix(x_liberal0)%*%as.matrix(betas)))
+}
+#-----------------------------------------------------------------------------
+
+
+#-----------------------------------------------------------------------------
+# Question 2.a
+
 #-----------------------------------------------------------------------------
