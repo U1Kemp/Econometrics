@@ -37,11 +37,10 @@ View(TransportChoiceDataset)
 # Create a tables for descriptive summary of continuous variables
 table_cont <- data.frame(
   Name = c("DCOST", "DOVTT", "DIVTT"),
-  Mean = c(mean(TransportChoiceDataset[['DCOST']]), mean(TransportChoiceDataset[['DOVTT']]), mean(TransportChoiceDataset[['DIVTT']])),
-  StdDev = c(sd(TransportChoiceDataset[['DCOST']]), sd(TransportChoiceDataset[['DOVTT']]), sd(TransportChoiceDataset[['DIVTT']]))
+  Mean = round(c(mean(TransportChoiceDataset[['DCOST']]), mean(TransportChoiceDataset[['DOVTT']]), mean(TransportChoiceDataset[['DIVTT']])),2),
+  StdDev = round(c(sd(TransportChoiceDataset[['DCOST']]), sd(TransportChoiceDataset[['DOVTT']]), sd(TransportChoiceDataset[['DIVTT']])),2)
 )
 
-options(digits = 4)
 # view table
 table_cont
 
@@ -57,7 +56,6 @@ unique(TransportChoiceDataset$INTCPT)
 # [1] 1
 
 # Descriptive Summary for Discrete variables
-options(digits = 3) # calculate upto two digit after decimal
 
 #-----------------------------------------------------------------------------
 # Descriptive summary for CARS
@@ -66,7 +64,7 @@ count_table = table(TransportChoiceDataset$CARS)
 percentage_table = prop.table(count_table) * 100
 table_cars <- data.frame(
   Count = count_table,
-  Percentage = percentage_table
+  Percentage = round(percentage_table,3)
 )
 table_cars <- table_cars[c("Count.Var1","Count.Freq", "Percentage.Freq")]
 colnames(table_cars) = c('CARS','count','percentage' )
@@ -83,7 +81,7 @@ table_cars
 
 #-----------------------------------------------------------------------------
 
-options(digits = 4)
+
 #-----------------------------------------------------------------------------
 # Descriptive summary for DEPEND
 #-----------------------------------------------------------------------------
@@ -91,7 +89,7 @@ count_table = table(TransportChoiceDataset$DEPEND)
 percentage_table = prop.table(count_table) * 100
 table_depend <- data.frame(
   Count = count_table,
-  Percentage = percentage_table
+  Percentage = round(percentage_table,2)
 )
 table_depend <- table_depend[c("Count.Var1","Count.Freq", "Percentage.Freq")]
 colnames(table_depend) = c('DEPEND','count','percentage' )
@@ -158,36 +156,35 @@ find_hitrate <- function(model){
 }
 
 #-----------------------------------------------------------------------------
-options(digits = 5)
 # Probit Model
 #-----------------------------------------------------------------------------
-AIC(probit)
+round(AIC(probit),2)
 # [1] 470.33
 
-BIC(probit)
+round(BIC(probit),2)
 # [1] 494
 
-logLik(probit)
+round(logLik(probit),2)
 # 'log Lik.' -230.16 (df=5)
 
-find_hitrate(probit)
-# [1] 0.9038
+round(find_hitrate(probit),3)
+# [1] 0.904
 
 #-----------------------------------------------------------------------------
 # Logit Model
 #-----------------------------------------------------------------------------
 
-AIC(logit)
+round(AIC(logit),2)
 # [1] 465.74
 
-BIC(logit)
+round(BIC(logit),2)
 # [1] 489.42
 
-logLik(logit)
+round(logLik(logit),2)
 #'log Lik.' -227.87 (df=5)
 
-find_hitrate(logit)
-# [1] 0.9038
+round(find_hitrate(logit),3)
+# [1] 0.904
 
 #-----------------------------------------------------------------------------
 # Question (3) 
@@ -223,10 +220,9 @@ means <- rep(0,length(colnames(Mroz_Data)))
 std <- rep(0,length(means))
 names <- colnames(Mroz_Data)
 
-options(digits = 2)
 for(i in 1:length(means)){
-  means[i] = mean(Mroz_Data[[names[i]]])
-  std[i] = sd(Mroz_Data[[names[i]]])
+  means[i] = round(mean(Mroz_Data[[names[i]]]),2)
+  std[i] = round(sd(Mroz_Data[[names[i]]]),2)
 }
 table_cont <- data.frame(
   Name = names,
@@ -270,7 +266,6 @@ coeftest(lr_model)
 #-----------------------------------------------------------------------------
 # part (d)
 #-----------------------------------------------------------------------------
-options(digits = 4)
 # Fit a tobit model
 Tobit = tobit(WHRS ~ WE + WA + AX + KL6,
               data = Mroz_Data, left = 0, right = Inf,
@@ -324,10 +319,10 @@ error_sigma = Tobit$scale
 # Marginal Effect of another year of education on observed hours of work
 # \Phi(\frac{x'_p \beta}{\sigma})
 marginal_effect = beta_j*pnorm(x_p%*%Tobit$coefficients/error_sigma)
-marginal_effect
+round(marginal_effect,3)
 
 #      [,1]
-# [1,] 26.6
+# [1,] 26.61
 
 #-----------------------------------------------------------------------------
 
