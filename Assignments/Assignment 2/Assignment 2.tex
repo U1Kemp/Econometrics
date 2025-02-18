@@ -9,6 +9,25 @@
 \usepackage{amssymb}
 \usepackage{xcolor}
 \usepackage{booktabs} % For table resizing
+\usepackage{listings}
+
+\lstset{
+  language=R,             
+  basicstyle=\ttfamily\small,   % Use a small monospaced font
+  keywordstyle=\color{blue}, 
+  commentstyle=\color{gray},  
+  stringstyle=\color{red},  
+  numbers=left,           
+  numberstyle=\tiny,      
+  stepnumber=1,           
+  frame=single,           
+  breaklines=true,        
+  breakatwhitespace=true, 
+  columns=flexible,       
+  xleftmargin=5pt,        
+  xrightmargin=5pt        
+}
+
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -118,17 +137,137 @@ which is the same as the value obtained in part(b) of Question 1. So escaling th
 \subsubsection*{Identification problem}
 This identification problem can be solved by fixing the scale of the distribution of $\epsilon_i$. In particular we can set the scale of the distribution of $\epsilon_i$ to 1, i.e. var($\epsilon_i$) = 1.
 
+\pagebreak
+
 \subsection*{(e)}
+\begin{tiny}
 
 \subsubsection*{(i) Descriptive Summary of the data}
 
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{@{}lcccc@{}}
+    \toprule
+    \text{VARIABLE} & \text{}       & \text{MEAN}       &\text{STD} \\ \midrule
+    LOG AGE         &          &           3.72        &      0.44              \\
+    LOG INCOME      &               &           10.63        &       0.98          \\ 
+    HOUSEHOLD SIZE  &               &           2.74        &           1.42         \\
+    \midrule
+                    & \text{CATEGORY} & \text{COUNTS}  & \text{PERCENTAGE} \\ \midrule
+    PAST USE        &               &      719             &        48.19            \\
+    MALE        &               &       791            &             53.02       \\ 
+                \\\cline{2-2}\\   
+                &BACHELORS \& ABOVE        &     551     &     36.93               \\
+    EDUCATION   &BELOW BACHELORS           &       434       &         29.09           \\
+                &HIGH SCHOOL \& BELOW           &     507         &      33.98          \\
+                \cline{2-2}\\   
+    TOLERANT STATES   &          &       556            &       37.27             \\
+    EVENTUALLY LEGAL   &          &     1154               &      77.35              \\
+                \cline{2-2}\\   
+                &WHITE       &     1149     &     77.01               \\
+    RACE   &AFRICAN AMERICAN        &       202       &         13.54           \\
+                &OTHER RACES           &     141         &      9.45          \\
+                \cline{2-2}\\   
+                &REPUBLICAN     &      333             &  22.32                  \\
+    PARTY AFFILIATION   & DEMOCRAT           & 511           &34.25                    \\
+                &INDEPENDENT \& OTHERS       &  648           &43.43                \\
+                \cline{2-2}\\   
+                &PROTESTANT       &     550              &36.86                    \\
+                &ROMAN CATHOLIC        &290                   &19.44                    \\
+    RELIGION    &CHRISTIAN           &182                   &12.20                    \\
+                &CONSERVATIVE           &122                   &8.18                \\
+                &LIBERAL        &  348                 &  23.32                  \\ 
+                \cline{2-2}\\                     
+                    &OPPOSE LEGALIZATION     &218        & 14.61                    \\
+    PUBLIC OPINION  &LEGAL ONLY FOR MEDICINAL USE & 640      & 42.90                  \\
+                    &LEGAL FOR PERSONAL USE      &634           &42.49              \\ \bottomrule
+    \end{tabular}
+    \caption{Descriptive Summary of the variables}
+    \label{tab:Feb14Data}
+    \end{table}
 
+\end{tiny}
+
+\pagebreak
 \subsubsection*{(ii) Public opinion on extent of marijuana legalization}
+
+We estimate Model 8 and replicate the results from the lecture.
+
+% \begin{lstlisting}
+% OrdProbit <- polr(factor(opinion) ~ log_age + log_income + hh1 + pastuse + 
+%              bachelor_above + below_bachelor + tolerant_state + expected_legal +
+%              black + other_race + democrat + other_party + male +
+%              christian + roman_catholic + liberal + conservative,
+%           data = dummy_copy, Hess = TRUE,
+%           method = 'probit' # set to 'probit' for ordered probit
+% )
+%   \end{lstlisting}
+
+% can t-value and the corresponding p-values
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{@{}lcccc@{}}
+    \toprule
+    \text{coef} & \text{Estimate}    & \text{Std. Error} &\text{t value} &\text{p value} \\ 
+    \midrule
+    intercept        & 0.35        &0.48    &0.72  &0.47\\
+    log\_age          & -0.35      & 0.08   & -4.51 &  $< 0.05$\\
+    log\_income        & 0.09      & 0.04    & 2.47 & $< 0.05$  \\
+    hh1               &-0.02       &0.02      & -0.87  & 0.38     \\
+    pastuse           & 0.69       &0.06      &10.67 & $< 0.05$\\
+    bachelor\_above    & 0.24      & 0.08     & 3.01 & $< 0.05$\\
+    below\_bachelor    & 0.05      & 0.08      &0.62  & 0.54\\
+    tolerant\_state    & 0.07      & 0.07      &1.04   & 0.30\\
+    expected\_legal   &  0.57      & 0.07      &7.76 & $< 0.05$\\
+    black             & 0.03       &0.10        &0.26 & 0.79\\
+    other\_race       & -0.28      & 0.11       &-2.56 & $< 0.05$\\
+    democrat          & 0.44       & 0.09      &5.03 & $< 0.05$\\
+    other\_party     &   0.36      & 0.08      &4.56 & $< 0.05$\\
+    male              & 0.06       & 0.06      &1.00  & 0.32\\
+    christian         & 0.16       & 0.10       &1.60 & 0.11 \\
+    roman\_catholic   &  0.10      &  0.09      &1.19  & 0.23\\
+    liberal           & 0.39       &0.09       &4.39 & $< 0.05$\\
+    conservative      & 0.09       &0.12       &0.76 & 0.45\\    
+    cut\_point         & 1.46       &0.05      &29.58 & $< 0.05$  \\\midrule 
+    \\
+    LR ($\chi^2$) Statistic       & 377        \\
+    McFadden's $R^2$              & 0.13        \\
+    Hit-Rate                      & 58.91        \\\bottomrule
+    % $^{**} p < 0.05, ^{*}p < 0.10$
+    \end{tabular}
+    
+    \caption{Model 8: Estimation Results}
+\end{table}
+
 
 
 \subsubsection*{(iii) Covariate effects of the variables}
 
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{@{}lcccc@{}}
+    \toprule
+    \text{Covariate} &$\Delta$ P(not legal)& $\Delta$ P(medicinal use) &$\Delta$ P(personal use)\\ \midrule
+    Age, 10 years    &  0.015          &  0.012          &  0.028   \\
+    Income, \$ 10,000    &   -0.005         &   -0.003         &  0.008   \\
+    Past Use    &    -0.129        &-0.113&    0.243 \\
+    Bachelors \& Above    &   -0.045         &   -0.35         &  0.080   \\
+    Eventually Legal    &       -0.126     &  -0.60          & 0.186    \\
+    Other Races    &   0.059         &    0.031        & -0.089    \\
+    Democrat    &     -0.80      & -0.066          &   0.147  \\
+    Other parties    &   -0.070         &   -0.051         &  0.121   \\
+    Liberal    &   -0.68         &      -0.066      &   0.134  \\\bottomrule
+    \end{tabular}
+    
+    \caption{Average covariate eﬀects from Model 8.}
+\end{table}
 
 \newpage
 \section*{Question 2}
+
+\subsection*{(a)}
+
+\subsection*{(b)}
+
+\subsection*{(c)}
 \end{document}

@@ -14,6 +14,8 @@ library(brant)
 library(VGAM)
 # For marginal effects
 library(erer)
+# For Panel Data Model
+library(plm)
 
 #-----------------------------------------------------------------------------
 # Question 1.e
@@ -113,8 +115,6 @@ dummy_copy$income = sapply(dummy_copy$income,quantify_income)
 dummy_copy$income = log(dummy_copy$income)
 names(dummy_copy)[names(dummy_copy) == "income"] <- "log_income"
 
-dummy_copy
-
 #-----------------------------------------------------------------------------
 # Descriptive Summary of Continuous variables
 #-----------------------------------------------------------------------------
@@ -122,8 +122,8 @@ means <- rep(0,3)
 stdev <- rep(0,3)
 ct = 1
 for(col in c('log_age','log_income','hh1')){
-  means[ct] = mean(dummy_copy[[col]])
-  stdev[ct] = sd(dummy_copy[[col]])
+  means[ct] = round(mean(dummy_copy[[col]]),2)
+  stdev[ct] = round(sd(dummy_copy[[col]]),2)
   ct = ct + 1
 }
 
@@ -134,8 +134,6 @@ table_cont <- data.frame(
   StdDev = stdev
 )
 
-# Report upto two places afer decimal
-table_cont[,2:3] = sapply(table_cont[,2:3],function(x) round(x, digits = 2))
 table_cont
 #     Variable  Mean StdDev
 # 1    log_age  3.72   0.44
@@ -149,12 +147,11 @@ table_cont
 #-----------------------------------------------------------------------------
 table_use_and_male <- data.frame(
   Variable = c("Past Use", "Male"),
-  Counts = c(sum(dummy_copy$q57=='Yes'),sum(dummy_copy$sex=="Male")),
-  Percentage = c(mean(dummy_copy$q57=='Yes')*100, mean(dummy_copy$sex=="Male")*100)
+  Counts = round(c(sum(dummy_copy$q57=='Yes'),sum(dummy_copy$sex=="Male")),2),
+  Percentage = round(c(mean(dummy_copy$q57=='Yes')*100,
+                       mean(dummy_copy$sex=="Male")*100),2)
 )
 
-# Percentage upto two places after decinal
-table_use_and_male[,3] = sapply(table_use_and_male[,3], function(x) round(x,digits = 2))
 table_use_and_male
 #   Variable Counts Percentage
 # 1 Past Use    719      48.19
@@ -185,11 +182,8 @@ educ_per[3] = 100*mean(dummy_copy$educ2 == 'HS'
 table_educ = data.frame(
   Category = c("Bachelors & Above", "Below Bachelors", "High School & Below"),
   Counts = educ_counts,
-  Percentage = educ_per
+  Percentage = round(educ_per,2)
 )
-
-# upto two places after decimal
-table_educ[,3] = sapply(table_educ[,3], function(x) round(x, digits = 2))
 
 table_educ
 #              Category Counts Percentage
@@ -213,20 +207,6 @@ table_even_legal
 #-----------------------------------------------------------------------------
 # Race
 #-----------------------------------------------------------------------------
-## White
-sum(dummy_copy$race3m1 == 'White')
-mean(dummy_copy$race3m1 == "White")*100
-
-## African American
-sum(dummy_copy$race3m1 == "Black or African-American")
-mean(dummy_copy$race3m1 == "Black or African-American")*100
-
-## Others
-length(dummy_copy$educ2) - sum(dummy_copy$race3m1 == 'White') -
-  sum(dummy_copy$race3m1 == "Black or African-American")
-(1 - mean(dummy_copy$race3m1 == 'White') -
-  mean(dummy_copy$race3m1 == "Black or African-American"))*100
-
 table_race = data.frame(
   Category = c("White","African American","Others"),
   Counts = c(sum(dummy_copy$race3m1 == 'White'),
@@ -363,8 +343,6 @@ table_tol
 # Model 8
 # Prepare the variables for the model
 #-----------------------------------------------------------------------------
-# Intercept
-dummy_copy$intercept = rep(1,length(dummy_copy$q46))
 
 # Past Use
 dummy_copy$pastuse = (dummy_copy$q57 == "Yes") + 0
@@ -401,6 +379,7 @@ dummy_copy$expected_legal = (dummy_copy$q55 == "Yes, it will") + 0
 
 # Race
 dummy_copy$black = (dummy_copy$race3m1 == "Black or African-American") + 0
+
 dummy_copy$white = (dummy_copy$race3m1 == "White") + 0
 dummy_copy$other_race = rep(1,length(dummy_copy$race3m1)) - dummy_copy$black - dummy_copy$white
 
@@ -477,13 +456,14 @@ round(coeftest(OrdProbit),2) # upto two places after decimal
 #   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 #-----------------------------------------------------------------------------
-# Standard error of intercept and cut-point of Model 8
+# Estimate and Standard error of intercept and cut-point of Model 8
 #-----------------------------------------------------------------------------
-
 # The polr function in R, does not contain the intercept term by design
 # So \gamma_1 = 0 convention is not followed either
 # The choice of intercept which sets \gamma_1 = 0, is the negative of 1|2
 # given by the polr function, i.e. 
+#-----------------------------------------------------------------------------
+# Estimates
 #-----------------------------------------------------------------------------
 intercept = -OrdProbit$zeta[1]
 names(intercept) = NULL
@@ -491,17 +471,15 @@ round(intercept,2)
 # 0.35
 
 #-----------------------------------------------------------------------------
-# the standard error of intercept will be the same as the standard error of
-# OrdProbit$zeta[1]
-
 # This choice of intercept will make the other cutoff point (\gamma_2) to be
 #-----------------------------------------------------------------------------
 cut_point = OrdProbit$zeta[2] - OrdProbit$zeta[1]
+names(cut_point)= NULL
 round(cut_point,2) # upto two places after decimal
-# 2|3 
 # 1.46
 #-----------------------------------------------------------------------------
-# standard errors
+# Standard Error
+#-----------------------------------------------------------------------------
 se <- sqrt(diag(vcov(OrdProbit)))
 
 # se_thresholds has standard errors of 1|2 and 2|3
@@ -510,13 +488,16 @@ se_thresholds
 # 1|2       2|3 
 # 0.4801557 0.4807061 
 
-#-----------------------------------------------------------------------------
+names(se_thresholds) = NULL
+
 # covariance of the original thresholds 1|2 and 2|3 of polr
 cov12 = vcov(OrdProbit)[18,19] # as 1|2 and 2|3 are the 18th and 19th variable
 cov12
 # 0.2295884
 
 #-----------------------------------------------------------------------------
+# the standard error of intercept will be the same as the standard error of
+# OrdProbit$zeta[1]
 # standard error of the intercept
 round(se_thresholds[1],2)
 # 0.48
@@ -526,9 +507,30 @@ round(se_thresholds[1],2)
 
 # standard error of the new cut-point(\gamma_2):
 se_cut_point = sqrt(se_thresholds[2]^2 + se_thresholds[1]^2 - 2 * cov12)
-names(se_cut_point) = NULL
 round(se_cut_point,2)
 # 0.05
+
+#-----------------------------------------------------------------------------
+# t-value of the intercept and cut-point
+#-----------------------------------------------------------------------------
+# intercept t-value
+round(intercept/se_thresholds[1],2) # intercept/se(intercept)
+# 0.72 
+
+# intercept p-value
+round(2 * pt(-abs(intercept/se_thresholds[1]), 1491),2)
+# 0.47
+
+# cut-point t-value
+round(cut_point/se_cut_point,2) # (cut_point)/se(cut_point)
+# 29.58
+
+# cut-point p-value
+round(2 * pt(-abs(cut_point/se_cut_point), 1491),2)
+# 0
+
+#-----------------------------------------------------------------------------
+# LR Statistic, McFadden R^2 and Hit Rate
 
 #-----------------------------------------------------------------------------
 # LR Statistic
@@ -701,8 +703,8 @@ for(i in 1:3){
 names(ce_democrat) <- c("not legal","medicinal use","personal use")
 round(ce_democrat,3)
 # not legal medicinal use  personal use 
-#     0.059         0.031        -0.089 
------------------------------------------------------------------------------
+#    -0.080        -0.066         0.147
+#-----------------------------------------------------------------------------
 # Covariate Effect of Other Party
 #-----------------------------------------------------------------------------
 x_other_party1 = X
@@ -744,6 +746,129 @@ round(ce_liberal,3)
 
 
 #-----------------------------------------------------------------------------
-# Question 2.a
+# Question 2
+#-----------------------------------------------------------------------------
+# Load the data
+Grunfeld220obs <- read_excel("C:/Users/utpal/Documents/Notes/Projects/Econometrics/Assignments/Assignment 2/Grunfeld220obs.xlsx", 
+  sheet = "Sheet1")
+
+# List of firms in the data
+unique(Grunfeld220obs$firm)
+# [1] "General Motors"    "US Steel"          "General Electric"  "Chrysler"         
+# [5] "Atlantic Refining" "IBM"               "Union Oil"         "Westinghouse"     
+# [9] "Goodyear"          "Diamond Match"     "American Steel"   
+
+# Exclude "American Steel"
+exclude = unique(Grunfeld220obs$firm)[11]
+Grunfeld <- Grunfeld220obs[Grunfeld220obs$firm != exclude,]
 
 #-----------------------------------------------------------------------------
+# 2.a
+#-----------------------------------------------------------------------------
+# Pooled Effects Model
+pooled_ols_plm <- plm(invest ~ capital + value, data = Grunfeld,
+                      index = c("firm", "year"),
+                      effect = "individual", model = "pooling")
+summary(pooled_ols_plm)
+# Pooling Model
+# 
+# Call:
+#   plm(formula = invest ~ capital + value, data = Grunfeld, effect = "individual", 
+#       model = "pooling", index = c("firm", "year"))
+# 
+# Balanced Panel: n = 10, T = 20, N = 200
+# 
+# Residuals:
+#       Min.   1st Qu.    Median   3rd Qu.      Max. 
+# -291.6757  -30.0137    5.3033   34.8293  369.4464 
+# 
+# Coefficients:
+#                  Estimate  Std. Error t-value  Pr(>|t|)    
+# (Intercept)   -42.7143694   9.5116760 -4.4907 1.207e-05 ***
+#   capital       0.2306785   0.0254758  9.0548 < 2.2e-16 ***
+#   value         0.1155622   0.0058357 19.8026 < 2.2e-16 ***
+#   ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# 
+# Total Sum of Squares:    9359900
+# Residual Sum of Squares: 1755900
+# R-Squared:      0.81241
+# Adj. R-Squared: 0.8105
+# F-statistic: 426.576 on 2 and 197 DF, p-value: < 2.22e-16
+
+#-----------------------------------------------------------------------------
+# 2.b
+#-----------------------------------------------------------------------------
+# Fixed Effects Model
+fd_ols_plm <- plm(invest ~ capital + value, data = Grunfeld,
+                      index = c("firm", "year"),
+                      effect = "individual", model = "within")
+summary(fd_ols_plm)
+# Oneway (individual) effect Within Model
+# 
+# Call:
+#   plm(formula = invest ~ capital + value, data = Grunfeld, effect = "individual", 
+#       model = "within", index = c("firm", "year"))
+# 
+# Balanced Panel: n = 10, T = 20, N = 200
+# 
+# Residuals:
+#   Min.    1st Qu.     Median    3rd Qu.       Max. 
+# -184.00857  -17.64316    0.56337   19.19222  250.70974 
+# 
+# Coefficients:
+#   Estimate Std. Error t-value  Pr(>|t|)    
+# capital 0.310065   0.017355 17.8666 < 2.2e-16 ***
+#   value   0.110124   0.011857  9.2879 < 2.2e-16 ***
+#   ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# 
+# Total Sum of Squares:    2244400
+# Residual Sum of Squares: 523480
+# R-Squared:      0.76676
+# Adj. R-Squared: 0.75311
+# F-statistic: 309.014 on 2 and 188 DF, p-value: < 2.22e-16
+
+#-----------------------------------------------------------------------------
+# 2.c
+#-----------------------------------------------------------------------------
+# Random Effects Model
+random_ols_plm <- plm(invest ~ capital + value, data = Grunfeld,
+                      index = c("firm", "year"),
+                      effect = "individual", model = "random")
+summary(random_ols_plm)
+# Oneway (individual) effect Random Effect Model 
+# (Swamy-Arora's transformation)
+# 
+# Call:
+# plm(formula = invest ~ capital + value, data = Grunfeld, effect = "individual", 
+#     model = "random", index = c("firm", "year"))
+# 
+# Balanced Panel: n = 10, T = 20, N = 200
+# 
+# Effects:
+#                   var std.dev share
+# idiosyncratic 2784.46   52.77 0.282
+# individual    7089.80   84.20 0.718
+# theta: 0.8612
+# 
+# Residuals:
+#      Min.   1st Qu.    Median   3rd Qu.      Max. 
+# -177.6063  -19.7350    4.6851   19.5105  252.8743 
+# 
+# Coefficients:
+#               Estimate Std. Error z-value Pr(>|z|)    
+# (Intercept) -57.834415  28.898935 -2.0013  0.04536 *  
+# capital       0.308113   0.017180 17.9339  < 2e-16 ***
+# value         0.109781   0.010493 10.4627  < 2e-16 ***
+# ---
+# Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# 
+# Total Sum of Squares:    2381400
+# Residual Sum of Squares: 548900
+# R-Squared:      0.7695
+# Adj. R-Squared: 0.76716
+# Chisq: 657.674 on 2 DF, p-value: < 2.22e-16
+
+#-----------------------------------------------------------------------------
+
