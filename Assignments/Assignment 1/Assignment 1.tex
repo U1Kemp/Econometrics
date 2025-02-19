@@ -236,7 +236,7 @@ We now estimate the Probit and Logit models by regressing the dependent variable
 \begin{itemize}
     \item \textbf{Probit:}
     
-    The p-value for the coefficient of cars is less than $2^{-16}$, so the coefficient is significant. The coefficient is positive with a value of 1.225, so people with more cars are more likely to choose automobile than transit. More precisely, a unit increase in the number of cars owned will result in an increase of 1.225 in the log-odds.
+    The p-value for the coefficient of cars is less than $2^{-16}$, so the coefficient is significant. The coefficient is positive with a value of 1.225, so people with more cars are more likely to choose automobile than transit.
 
     \item \textbf{Logit:}
     
@@ -341,7 +341,8 @@ The corresponding likelihood function for the Tobit Model is:
      WomenEduc  &      73.29      &       20.47       & 3.58      \\ %\hline
      WomenExp   &      80.54      &        6.29        & 12.81     \\ %\hline
      WomenAge   &      -60.77     &       6.89       & -8.82     \\ %\hline
-     childl6    &       -918.92   &       111.66    & -8.23     \\ \hline
+     childl6    &       -918.92   &       111.66    & -8.23     \\ 
+     $\ln(\sigma)$ &  7.0332  &  0.0371 & 189.57     \\\hline
     \end{tabular}
     \caption{Tobit model summary}
     \label{tab:Tobit}
@@ -379,7 +380,7 @@ The marginal effect of year of education on observed hours of work is evaluated 
 Setting WomenEduc, WomenExp, and WomenAge at the corresponding mean values and childl6 = 1, and inputting the value of $\beta$ and $\sigma$ obtained from the Tobit model in the above equation we get:
 
 \[
-    \left. \frac{\partial E(\text{WHRS}_p|x_p)}{\partial \text{WomenEduc}} \right| z_p > 0 = 26.6
+    \left. \frac{\partial E(\text{WHRS}_p|x_p)}{\partial \text{WomenEduc}} \right| z_p > 0 = 26.61
 \]
 
 

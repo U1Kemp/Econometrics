@@ -253,7 +253,7 @@ coeftest(lr_model)
 
 # t test of coefficients:
 #   
-#               Estimate  Std. Error    t value Pr(>|t|)    
+#               Estimate  Std. Error   t value Pr(>|t|)    
 #   (Intercept)  1829.75     292.54    6.25  9.8e-10 ***
 #   WE            -16.46      15.58   -1.06   0.2913    
 #   WA            -17.11       5.46   -3.13   0.0018 ** 
