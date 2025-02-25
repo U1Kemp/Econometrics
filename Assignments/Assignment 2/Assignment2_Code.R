@@ -169,15 +169,7 @@ educ_counts[3] = sum(dummy_copy$educ2 == 'HS'
                      | dummy_copy$educ2 == 'Less than HS' 
                      | dummy_copy$educ2 == 'HS Incomplete')
 
-educ_per = rep(0,3)
-educ_per[1] = 100*mean(dummy_copy$educ2 == "Postgraduate Degree" 
-                     | dummy_copy$educ2 == "Four year college"
-                     | dummy_copy$educ2 == "Some Postgraduate")
-educ_per[2] = 100*mean(dummy_copy$educ2 == 'Some College' 
-                     | dummy_copy$educ2 == "Associate Degree")
-educ_per[3] = 100*mean(dummy_copy$educ2 == 'HS' 
-                     | dummy_copy$educ2 == 'Less than HS' 
-                     | dummy_copy$educ2 == 'HS Incomplete')
+educ_per = 100*educ_counts/length(dummy_copy$educ2)
 
 table_educ = data.frame(
   Category = c("Bachelors & Above", "Below Bachelors", "High School & Below"),
@@ -250,26 +242,22 @@ table_party
 #-----------------------------------------------------------------------------
 ## Christian
 christian_count = sum(dummy_copy$relig == "Christian (VOL.)")
-christian_per = mean(dummy_copy$relig == "Christian (VOL.)")*100
+christian_per = christian_count*100/length(dummy_copy$relig)
 
 ## Roman Catholic
 rom_cat_count = sum(dummy_copy$relig == "Roman Catholic (Catholic)")
-rom_cat_per = mean(dummy_copy$relig == "Roman Catholic (Catholic)")*100
+rom_cat_per = rom_cat_count*100/length(dummy_copy$relig)
 
 ## Protestant
 pro_count = sum(dummy_copy$relig == "Protestant (Baptist, Methodist, Non-denominational, Lutheran, Presbyterian, Pentecostal, Episcopalian, Reformed, etc.)")
-pro_per = mean(dummy_copy$relig == "Protestant (Baptist, Methodist, Non-denominational, Lutheran, Presbyterian, Pentecostal, Episcopalian, Reformed, etc.)")*100
+pro_per = pro_count*100/length(dummy_copy$relig)
 
 ## Liberal
 liberal_count = sum(dummy_copy$relig == "Agnostic (not sure if there is a God)"
     | dummy_copy$relig == "Nothing in particular" 
     | dummy_copy$relig == "Atheist (do not believe in God)"
     | dummy_copy$relig == "Unitarian (Universalist) (VOL.)")
-liberal_per = mean(dummy_copy$relig == "Agnostic (not sure if there is a God)"
-    | dummy_copy$relig == "Nothing in particular" 
-    | dummy_copy$relig == "Atheist (do not believe in God)"
-    | dummy_copy$relig == "Unitarian (Universalist) (VOL.)")*100
-
+liberal_per = liberal_count*100/length(dummy_copy$relig)
 ## Conservative
 con_count = sum(dummy_copy$relig == "Mormon (Church of Jesus Christ of Latter-day Saints/LDS)"
     | dummy_copy$relig == "Jewish (Judaism)"
@@ -277,12 +265,7 @@ con_count = sum(dummy_copy$relig == "Mormon (Church of Jesus Christ of Latter-da
     | dummy_copy$relig == "Buddhist"
     | dummy_copy$relig == "Muslim (Islam)"
     | dummy_copy$relig == "Orthodox (Greek, Russian, or some other orthodox church)")
-con_per = mean(dummy_copy$relig == "Mormon (Church of Jesus Christ of Latter-day Saints/LDS)"
-    | dummy_copy$relig == "Jewish (Judaism)"
-    | dummy_copy$relig == "Hindu"
-    | dummy_copy$relig == "Buddhist"
-    | dummy_copy$relig == "Muslim (Islam)"
-    | dummy_copy$relig == "Orthodox (Greek, Russian, or some other orthodox church)")*100
+con_per = con_count*100/length(dummy_copy$relig)
 
 table_rel <- data.frame(
   Category = c("Christain","Roman Catholic","Protestant","Liberal","Conservative"),
@@ -323,15 +306,10 @@ tolerant_states <- c("Alaska", "Arizona", "California", "Colorado", "Connecticut
                      "New Jersey", "New Mexico", "Oregon", "Rhode Island", "Vermont", 
                      "Washington", "Washington DC", "District of Columbia")
 
-count_tol = 0
-for(state in tolerant_states){
-  count_tol = count_tol + sum(dummy_copy$state == state)
-}
-
 table_tol <- data.frame(
   Variable = "Tolerant States",
-  Counts = count_tol,
-  Percentage = round(100*count_tol/length(dummy_copy$state),2)
+  Counts = sum(dummy_copy$state %in% tolerant_states),
+  Percentage = round(100*mean(dummy_copy$state %in% tolerant_states),2)
 )
 table_tol
 #         Variable Counts Percentage
@@ -364,7 +342,7 @@ dummy_copy$below_hs = ((dummy_copy$educ2 == 'HS')
 # Tolerant state
 ## function to check if a state is tolerant
 is_tolerant <- function(state){
-  if(sum(state == tolerant_states) == 1){
+  if(state %in% tolerant_states){
     return(1)
   }
   else{
@@ -528,7 +506,7 @@ round(cut_point/se_cut_point,2) # (cut_point)/se(cut_point)
 # cut-point p-value
 round(2 * pt(-abs(cut_point/se_cut_point), 1491),2)
 # 0
-
+# we get p-value as 0, as it is less than 0.01
 #-----------------------------------------------------------------------------
 # LR Statistic, McFadden R^2 and Hit Rate
 
@@ -601,7 +579,7 @@ x_income0 = X
 ce_income = rep(0,3)
 for(i in 1:3){
   ce_income[i] = mean(pnorm(cut_points[i+1] - as.matrix(x_income1)%*%as.matrix(betas))-
-                     pnorm(cut_points[i] - as.matrix(x_income1)%*%as.matrix(betas)))- 
+                    pnorm(cut_points[i] - as.matrix(x_income1)%*%as.matrix(betas)))- 
     mean(pnorm(cut_points[i+1] - as.matrix(x_income0)%*%as.matrix(betas))-
                     pnorm(cut_points[i] - as.matrix(x_income0)%*%as.matrix(betas)))
 }
@@ -620,9 +598,9 @@ x_past_use0[1:dim(X)[1],4] = 0
 ce_pastuse = rep(0,3)
 for(i in 1:3){
   ce_pastuse[i] = mean(pnorm(cut_points[i+1] - as.matrix(x_past_use1)%*%as.matrix(betas))-
-                         pnorm(cut_points[i] - as.matrix(x_past_use1)%*%as.matrix(betas)))-
+                        pnorm(cut_points[i] - as.matrix(x_past_use1)%*%as.matrix(betas)))-
                   mean(pnorm(cut_points[i+1] - as.matrix(x_past_use0)%*%as.matrix(betas))-
-                          pnorm(cut_points[i] - as.matrix(x_past_use0)%*%as.matrix(betas)))
+                        pnorm(cut_points[i] - as.matrix(x_past_use0)%*%as.matrix(betas)))
 }
 names(ce_pastuse) <- c("not legal","medicinal use","personal use")
 round(ce_pastuse,3)
@@ -743,8 +721,13 @@ round(ce_liberal,3)
 # not legal medicinal use  personal use 
 #    -0.068        -0.066         0.134 
 #-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 
 
+
+
+
+#-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 # Question 2
 #-----------------------------------------------------------------------------
@@ -766,10 +749,11 @@ Grunfeld <- Grunfeld220obs[Grunfeld220obs$firm != exclude,]
 # 2.a
 #-----------------------------------------------------------------------------
 # Pooled Effects Model
-pooled_ols_plm <- plm(invest ~ capital + value, data = Grunfeld,
+#-----------------------------------------------------------------------------
+pooled_effect_plm <- plm(invest ~ capital + value, data = Grunfeld,
                       index = c("firm", "year"),
                       effect = "individual", model = "pooling")
-summary(pooled_ols_plm)
+summary(pooled_effect_plm)
 # Pooling Model
 # 
 # Call:
@@ -800,10 +784,11 @@ summary(pooled_ols_plm)
 # 2.b
 #-----------------------------------------------------------------------------
 # Fixed Effects Model
-fd_ols_plm <- plm(invest ~ capital + value, data = Grunfeld,
+#-----------------------------------------------------------------------------
+fe_model_plm <- plm(invest ~ capital + value, data = Grunfeld,
                       index = c("firm", "year"),
                       effect = "individual", model = "within")
-summary(fd_ols_plm)
+summary(fe_model_plm)
 # Oneway (individual) effect Within Model
 # 
 # Call:
@@ -817,9 +802,9 @@ summary(fd_ols_plm)
 # -184.00857  -17.64316    0.56337   19.19222  250.70974 
 # 
 # Coefficients:
-#   Estimate Std. Error t-value  Pr(>|t|)    
+#         Estimate Std. Error t-value  Pr(>|t|)    
 # capital 0.310065   0.017355 17.8666 < 2.2e-16 ***
-#   value   0.110124   0.011857  9.2879 < 2.2e-16 ***
+#   value 0.110124   0.011857  9.2879 < 2.2e-16 ***
 #   ---
 #   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 # 
@@ -830,13 +815,44 @@ summary(fd_ols_plm)
 # F-statistic: 309.014 on 2 and 188 DF, p-value: < 2.22e-16
 
 #-----------------------------------------------------------------------------
+# Firm specific intercepts
+#-----------------------------------------------------------------------------
+round(summary(fixef(fe_model_plm)),2) # upto two decimal places
+
+#                     Estimate Std. Error t-value Pr(>|t|)    
+# Atlantic Refining    -114.62      14.17   -8.09   <2e-16 ***
+# Chrysler              -27.81      14.08   -1.98     0.05 *  
+# Diamond Match          -6.57      11.83   -0.56     0.58    
+# General Electric     -235.57      24.43   -9.64   <2e-16 ***
+# General Motors        -70.30      49.71   -1.41     0.16    
+# Goodyear              -87.22      12.89   -6.77   <2e-16 ***
+# IBM                   -23.16      12.67   -1.83     0.07 .  
+# Union Oil             -66.55      12.84   -5.18   <2e-16 ***
+# US Steel              101.91      24.94    4.09   <2e-16 ***
+# Westinghouse          -57.55      13.99   -4.11   <2e-16 ***
+# ---
+#  Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+#-----------------------------------------------------------------------------
+# Test for Fixed Effects
+#-----------------------------------------------------------------------------
+pFtest(fe_model_plm, pooled_effect_plm)
+
+# F test for individual effects
+# 
+# data:  invest ~ capital + value
+# F = 49.177, df1 = 9, df2 = 188, p-value < 2.2e-16
+# alternative hypothesis: significant effects
+
+#-----------------------------------------------------------------------------
 # 2.c
 #-----------------------------------------------------------------------------
 # Random Effects Model
-random_ols_plm <- plm(invest ~ capital + value, data = Grunfeld,
+#-----------------------------------------------------------------------------
+re_model_plm <- plm(invest ~ capital + value, data = Grunfeld,
                       index = c("firm", "year"),
                       effect = "individual", model = "random")
-summary(random_ols_plm)
+summary(re_model_plm)
 # Oneway (individual) effect Random Effect Model 
 # (Swamy-Arora's transformation)
 # 
@@ -870,5 +886,15 @@ summary(random_ols_plm)
 # Adj. R-Squared: 0.76716
 # Chisq: 657.674 on 2 DF, p-value: < 2.22e-16
 
+#-----------------------------------------------------------------------------
+# Hausman Test
+#-----------------------------------------------------------------------------
+phtest(fe_model_plm,re_model_plm)
+
+# Hausman Test
+# 
+# data:  invest ~ capital + value
+# chisq = 2.3304, df = 2, p-value = 0.3119
+# alternative hypothesis: one model is inconsistent
 #-----------------------------------------------------------------------------
 
