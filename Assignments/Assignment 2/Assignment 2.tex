@@ -12,22 +12,23 @@
 \usepackage{listings}
 
 \lstset{
-  language=R,             
-  basicstyle=\ttfamily\small,   % Use a small monospaced font
-  keywordstyle=\color{blue}, 
-  commentstyle=\color{gray},  
-  stringstyle=\color{red},  
-  numbers=left,           
-  numberstyle=\tiny,      
-  stepnumber=1,           
-  frame=single,           
-  breaklines=true,        
-  breakatwhitespace=true, 
-  columns=flexible,       
-  xleftmargin=5pt,        
-  xrightmargin=5pt        
+  language=R,
+  frame=single,
+  basicstyle=\ttfamily\footnotesize,
+  columns=flexible,
+  numbers=left,
+  numberstyle=\tiny,
+  stepnumber=1,
+  numbersep=10pt,
+  captionpos=b,
+  backgroundcolor=\color{white},
+%   keywordstyle=\color{blue}\bfseries,     % Keywords in blue and bold
+  stringstyle=\color{red},                % Strings in red
+  commentstyle=\color{brown},             % Comments in green
+%   morekeywords={plm,summary,pFtest},      % Highlight these custom keywords
+%   deletekeywords={data,for,effects},                 % Remove "data" from the list of keywords
+%   showstringspaces=false           % Do not underline spaces in strings
 }
-
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -76,7 +77,7 @@ The probability of success,
 The likelihood function for the ordinal probit model is,
 \begin{align*}
     L(\beta,\gamma;y) &= \prod_{i=1}^{n}\prod_{j=1}^{J} Pr(y_i = j | \beta,\gamma)^{I(y_i = j)} &[\text{where } I(\cdot) \text{ is the indicator function}]\\
-                      &= \prod_{i=1}^{n}\prod_{j=1}^{J} (\Phi(\gamma_j - x'_{i}\beta) - \Phi(\gamma_{j-1} - x'_{i}\beta))^{I(y_i = j)}
+                      &= \prod_{i=1}^{n}\prod_{j=1}^{J} \Big(\Phi(\gamma_j - x'_{i}\beta) - \Phi(\gamma_{j-1} - x'_{i}\beta)\Big)^{I(y_i = j)}
 \end{align*}
 
 \subsection*{(b)}
@@ -98,16 +99,17 @@ We assume that $\epsilon_i \sim \mathcal{L}(0,1)$, for $i = 1,2, \cdots, n$. The
 The likelihood function for the ordinal logit model is,
 \begin{align*}
     L(\beta,\gamma;y) &= \prod_{i=1}^{n}\prod_{j=1}^{J} Pr(y_i = j | \beta, \gamma)^{I(y_i = j)} &[\text{where } I(\cdot) \text{ is the indicator function}]\\
-                      &=\prod_{i=1}^{n}\prod_{j=1}^{J} [\frac{e^{x'_i\beta}(e^{-\gamma_{j-1}} - e^{-\gamma_{j}})}{(1+e^{-(\gamma_j - x'_{i}\beta)})(1+e^{-(\gamma_{j-1} - x'_{i}\beta)})}]^{I(y_i = j)} 
+                      &= \displaystyle \prod_{i=1}^{n}\prod_{j=1}^{J} \left(\frac{e^{x'_i\beta}(e^{-\gamma_{j-1}} - e^{-\gamma_{j}})}{(1+e^{-(\gamma_j - x'_{i}\beta)})(1+e^{-(\gamma_{j-1} - x'_{i}\beta)})}\right)^{I(y_i = j)}
 \end{align*}
 
 \subsection*{(c)}
 
 \subsubsection*{Probability remain unchanged on adding a constant c to cut-points and the mean}
 
-Adding a constant $c$ to the cut-point $\gamma_j$ and the mean $x'_i\beta$, $\forall i = 1,2, \cdots, n$ and $j = 1,2,\cdots, J$, the latent variable $z_i$ becomes $x'_i\beta + c + \epsilon_i$ and the cut-point $\gamma_j$ becomes $\gamma_j + c$
+If we add a constant $c$ to the cut-points $\gamma_j$ and the means $x'_i\beta$, then $\forall j = 1,2,\cdots, J-1$ and $\forall i = 1,2,\cdots, n$,  the latent variable $z_i$ becomes $x'_i\beta + c + \epsilon_i$ and the cut-point $\gamma_j$ becomes $\gamma_j + c$.
+\vspace{0.25cm}
 
-The probability of $y_i$ taking the value $j$ is,
+\noindent The probability of $y_i$ taking the value $j$ is,
 \begin{align*}
     Pr(y_i = j) &= Pr(\gamma_{j-1}+c < z_i \leq \gamma_j + c)\\
                 &= Pr(\gamma_{j-1}+c < x'_i\beta + c + \epsilon_i \leq \gamma_j + c)\\
@@ -123,16 +125,17 @@ This identification problem can be solved by fixing the value of one of $\gamma_
 
 \subsubsection*{Rescaling the parameters $(\gamma_j,\beta)$ and scale of distribution does not change outcome probability}
 
-Rescaling the parameters $(\gamma_j,\beta)$ and the scale of the distribution of $\epsilon_i$ by some constant $d$, the latent variable $z_i$ becomes $x'_id\beta + \epsilon_i$ where $\epsilon_i \sim N(0,d^2)$ and the cut-point $\gamma_j$ becomes $d\gamma_j, \forall j = 1, 2, \cdots, J-1$.
+Rescaling the parameters $(\gamma_j,\beta)$ and the scale of the distribution of $\epsilon_i$ by some constant $d > 0$, the latent variable $z_i$ becomes $x'_id\beta + \epsilon_i$ where $\epsilon_i \sim N(0,d^2)$, $\forall i = 1,2,\cdots,n$ and the cut-point $\gamma_j$ becomes $d\gamma_j, \forall j = 1, 2, \cdots, J-1$.
+\vspace{0.25cm}
 
-The probability of $y_i$ taking the value $j$ is,
+\noindent The probability of $y_i$ taking the value $j$ is,
 \begin{align*}
     Pr(y_i=j) &= Pr(d\gamma_{j-1} < z_i \leq d\gamma_j) \\
               &= Pr(d\gamma_{j-1} < x'_i d\beta + \epsilon_i \leq d\gamma_j)\\
               &= Pr(\gamma_{j-1} - x'_i\beta < \frac{\epsilon_i}{d} \leq \gamma_j - x'_i\beta)\\
               &= \Phi(\gamma_j - x'_i\beta) - \Phi(\gamma_{j-1} - x'_i\beta) & [\text{as } \epsilon_i \sim N(0,d^2), \frac{\epsilon_i}{d} \sim N(0,1)]
 \end{align*}
-which is the same as the value obtained in part(b) of Question 1. So escaling the parameters $(\gamma_j,\beta)$ and the scale of the distribution by some arbitrary constant $d$ lead to same outcome probabilities.
+which is the same as the value obtained in part(b) of Question 1. So rescaling the parameters $(\gamma_j,\beta)$ and the scale of the distribution by some arbitrary constant $d$ lead to same outcome probabilities.
 
 \subsubsection*{Identification problem}
 This identification problem can be solved by fixing the scale of the distribution of $\epsilon_i$. In particular we can set the scale of the distribution of $\epsilon_i$ to 1, i.e. var($\epsilon_i$) = 1.
@@ -193,27 +196,16 @@ This identification problem can be solved by fixing the scale of the distributio
 
 We estimate Model 8 and replicate the results from the lecture.
 
-% \begin{lstlisting}
-% OrdProbit <- polr(factor(opinion) ~ log_age + log_income + hh1 + pastuse + 
-%              bachelor_above + below_bachelor + tolerant_state + expected_legal +
-%              black + other_race + democrat + other_party + male +
-%              christian + roman_catholic + liberal + conservative,
-%           data = dummy_copy, Hess = TRUE,
-%           method = 'probit' # set to 'probit' for ordered probit
-% )
-%   \end{lstlisting}
-
-% can t-value and the corresponding p-values
 \begin{table}[ht]
     \centering
-    \begin{tabular}{@{}lcccc@{}}
+    \begin{tabular}{@{}lrrrr@{}}
     \toprule
     \text{coef} & \text{Estimate}    & \text{Std. Error} &\text{t value} &\text{p value} \\ 
     \midrule
     intercept        & 0.35        &0.48    &0.72  &0.47\\
     log\_age          & -0.35      & 0.08   & -4.51 &  $< 0.05$\\
     log\_income        & 0.09      & 0.04    & 2.47 & $< 0.05$  \\
-    hh1               &-0.02       &0.02      & -0.87  & 0.38     \\
+    hh1(household size) &-0.02       &0.02      & -0.87  & 0.38     \\
     pastuse           & 0.69       &0.06      &10.67 & $< 0.05$\\
     bachelor\_above    & 0.24      & 0.08     & 3.01 & $< 0.05$\\
     below\_bachelor    & 0.05      & 0.08      &0.62  & 0.54\\
@@ -228,7 +220,7 @@ We estimate Model 8 and replicate the results from the lecture.
     roman\_catholic   &  0.10      &  0.09      &1.19  & 0.23\\
     liberal           & 0.39       &0.09       &4.39 & $< 0.05$\\
     conservative      & 0.09       &0.12       &0.76 & 0.45\\    
-    cut\_point         & 1.46       &0.05      &29.58 & $< 0.05$  \\\midrule 
+    cut\_point($\gamma_1$)         & 1.46       &0.05      &29.58 & $< 0.05$  \\\midrule 
     \\
     LR ($\chi^2$) Statistic       & 377        \\
     McFadden's $R^2$              & 0.13        \\
@@ -265,9 +257,176 @@ We estimate Model 8 and replicate the results from the lecture.
 \newpage
 \section*{Question 2}
 
+\subsection*{Grunfeld Investment Study}
+
+Investment is modeled as a function of market value, capital, and firm.
+There are 200 observation on 10 firms from 1935-1954 (20 years). We have excluded the data on the company American Steel.
+
+\subsubsection*{Variable Description}
+\begin{itemize}
+    \item invest: Gross investment in 1947 dollars.
+    \item value: Market value as of Dec. 31 in 1947 dollars.
+    \item capital: Stock of plant and equipment in 1947 dollars.
+    \item firm: General Motors, US Steel, General Electric, Chrysler, Atlantic Refining, IBM, Union Oil, Westinghouse, Goodyear, Diamond Match.
+\end{itemize}
+
 \subsection*{(a)}
+\textbf{Pooled Effects model}
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{@{}lrrrrr@{}}
+        \toprule
+                & Estimate  & Std. Error  & t-value & \(\text{Pr}(>|t|)\)\\
+                \midrule
+        intercept & -42.71 & 9.511 & -4.49 & \(<0.001\)\\
+        capital   & 0.23   & 0.025 & 9.05  & \(<0.001\)\\
+        value     & 0.12   & 0.006 & 19.80 & \(<0.001\)\\
+        \bottomrule
+    \end{tabular}
+    \caption{Covariates of the Pooled Effects model}
+\end{table}
+\begin{itemize}
+    \item R-Squared: 0.812
+    \item Adj. R-Squared: 0.810
+    \item F-Statistic: 426.58 with 2 and 197 df, p-value \(<0.001\) 
+\end{itemize}
 
+\textbf{Interpretation of Coefficients}
+\begin{itemize}
+    \item capital: It's coefficient is statistically significant(\(\text{p-value}<0.001\)) and has a positive value (0.23). So investment increases with increase in capital as per our Pooled Effects model.
+    \item value: It's coefficient is also statistically significant(\(\text{p-value}<0.001\)) and is positive (0.12). So a increase in value also increases the investment, but relatively lesser compared to capital. 
+\end{itemize}
+
+The model is able to explain about \(81.2\%\) variance in the data and the high value of the F-Statistic also shows that the variables are statistically significant.
+
+\newpage
 \subsection*{(b)}
+\textbf{Fixed Effects model}
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{@{}lrrrrr@{}}
+        \toprule
+                & Estimate  & Std. Error  & t-value & \(\text{Pr}(>|t|)\)\\
+                \midrule
+        capital   & 0.31   & 0.017 & 18.87  & \(<0.001\)\\
+        value     & 0.11   & 0.012 & 9.29 & \(<0.001\)\\
+        \bottomrule
+    \end{tabular}
+    \caption{Covariates of the Fixed Effects model}
+\end{table}
 
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{lrrrr}
+    \toprule
+     & {Estimate} & {Std. Error} & {t-value} & \(\text{Pr}(>|t|)\) \\ \midrule
+    Atlantic Refining   & -114.62 & 14.17 & -8.09  & $<0.001$ \\ 
+    Chrysler            & -27.81  & 14.08 & -1.98  & 0.05  \\ 
+    Diamond Match       & -6.57   & 11.83 & -0.56  & 0.58 \\ 
+    General Electric    & -235.57 & 24.43 & -9.64  & $<0.001$ \\ 
+    General Motors      & -70.30  & 49.71 & -1.41  & 0.16 \\ 
+    Goodyear            & -87.22  & 12.89 & -6.77  & $<0.001$ \\ 
+    IBM                 & -23.16  & 12.67 & -1.83  & 0.07  \\ 
+    Union Oil           & -66.55  & 12.84 & -5.18  & $<0.001$  \\ 
+    US Steel            & 101.91  & 24.94 & 4.09   & $<0.001$  \\ 
+    Westinghouse        & -57.55  & 13.99 & -4.11  & $<0.001$  \\
+    \bottomrule
+    \end{tabular}
+    \caption{Firm specific intercepts}
+\end{table}
+    
+\begin{itemize}
+    \item R-Squared: 0.767
+    \item Adj. R-Squared: 0.753
+    \item F-Statistic: 426.58 with 2 and 188 df, p-value \(<0.001\) 
+\end{itemize}
+
+\noindent\textbf{Test for Fixed Effects}
+
+\begin{lstlisting}[caption={R Code for Test for Fixed Effects}]
+#Test for Fixed Effects
+#-----------------------------------------------------------------------------
+pFtest(fe_model_plm, pooled_effect_plm)
+
+# OUTPUT:
+# F test for individual effects
+# 
+# data:  invest ~ capital + value
+# F = 49.177, df1 = 9, df2 = 188, p-value < 2.2e-16
+# alternative hypothesis: significant effects
+\end{lstlisting}
+
+As the p-value is very small(\(<2.2\times10^{-16}\)), the null hypothesis is rejected in favor of the alternative that there are significant fixed effects. Hence, a Fixed Effect model will a better
+choice than a Pooled Effect model, in this case.
+ 
+
+\subsubsection*{\textbf{Interpretation of Coefficients}}
+\begin{itemize}
+    \item capital:  It's coefficient is statistically significant(\(\text{p-value}<0.001\)) and has a positive value (0.31). So investment increases with increase in capital as per our Fixed Effects model.
+    \item value: It's coefficient is also statistically significant(\(\text{p-value}<0.001\)) and is positive (0.11). So a increase in value also increases the investment, but relatively lesser compared to capital. 
+\end{itemize}
+
+The model is able to explain about \(76.7\%\) of the variance in the data and the high value of the F-Statistic also shows that the variables are statistically significant. However the Fixed Effects model explains only within-firm variation only, which may not be directly comparable to the R-squared of the Pooled Effects model.
+
+\newpage
 \subsection*{(c)}
+\textbf{Random Effects model}
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{lrrr}
+        \toprule
+            & var & std.dev & share \\
+            \midrule
+    idiosyncratic & 2784.46 & 52.77 & 0.282 \\
+    individual    & 7089.80 & 84.20 & 0.718 \\
+    \midrule
+    \(\theta\) &0.861\\
+    \bottomrule        
+    \end{tabular}    
+    \caption{Effects}
+\end{table}
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{@{}lrrrrr@{}}
+        \toprule
+                & Estimate  & Std. Error  & z-value & \(\text{Pr}(>|z|)\)\\
+                \midrule
+        intercept & -57.83 & 28.90 & -2.00 & 0.045 \\
+        capital   & 0.31   & 0.017 & 17.93  & \(<0.001\)\\
+        value     & 0.11   & 0.010 & 10.46 & \(<0.001\)\\
+        \bottomrule
+    \end{tabular}
+    \caption{Covariates of the Fixed Effects model}
+\end{table}
+\begin{itemize}
+    \item R-Squared: 0.770
+    \item Adj. R-Squared: 0.767
+    \item \(\chi^2\) Statistic: 657.67 on 2 df, p-value \(<0.001\) 
+\end{itemize}
+
+\noindent\textbf{Hausman Test}
+
+\begin{lstlisting}[caption={R Code for Hausman Test}]
+# Hausman Test
+#-----------------------------------------------------------------------------
+phtest(fe_model_plm,re_model_plm)
+
+# OUTPUT:
+# Hausman Test
+# 
+# data:  invest ~ capital + value
+# chisq = 2.3304, df = 2, p-value = 0.3119
+# alternative hypothesis: one model is inconsistent
+\end{lstlisting}
+
+The null hypothesis cannot be rejected here (\(\text{p-value} = 0.3119\)). Hence it makes sense to use a Random Effects model instead of a Fixed Effects model.
+
+\subsubsection*{\textbf{Interpretation of Coefficients}}
+\begin{itemize}
+    \item capital: It's coefficient is statistically significant (\(\text{p-value}<0.001\)) and is positive (0.31). So increase in capital increases the investment as per our Random Effects model.
+    \item value: It's coefficient is also statistically significant (\(\text{p-value}<0.001\) and is positive (0.11). So increase in value also increases the investment but has a smaller effect than capital.
+\end{itemize}
+
+The R-Squared for the Random Effects model is similar to the Fixed Effects model (0.770). It accounts for both the within-firm and between-firm variation, so is not directly comparable with the R-Squared of the Fixed Effects model and Pooled Effects model. Moreover \(86.1\%\) (\(\theta = 0.861\)) of the variation in the dependent variable is due to individual-specific effects rather than the idiosyncratic error term.
+
 \end{document}
