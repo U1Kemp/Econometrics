@@ -407,7 +407,7 @@ OrdProbit <- polr(factor(opinion) ~ log_age + log_income + hh1 + pastuse + bache
                     method = 'probit' # set to 'probit' for ordered probit
 )
 
-# get the coefficients
+# get the coefficients (except intercept)
 round(coeftest(OrdProbit),2) # upto two places after decimal
 
 # t test of coefficients:
@@ -476,6 +476,7 @@ cov12
 #-----------------------------------------------------------------------------
 # the standard error of intercept will be the same as the standard error of
 # OrdProbit$zeta[1]
+
 # standard error of the intercept
 round(se_thresholds[1],2)
 # 0.48
@@ -549,6 +550,7 @@ X = dummy_copy[names(betas)]
 opinions = dummy_copy$opinion
 cut_points = c(-Inf,OrdProbit$zeta[1],OrdProbit$zeta[2],Inf)
 
+
 #-----------------------------------------------------------------------------
 # Covariate Effect of Age, 10 years
 #-----------------------------------------------------------------------------
@@ -568,6 +570,7 @@ names(ce_age) <- c("not legal","medicinal use","personal use")
 round(ce_age,3)
 # not legal medicinal use  personal use 
 #     0.015         0.012        -0.028
+
 #-----------------------------------------------------------------------------
 # Covariate Effect of Income, $10000 
 #-----------------------------------------------------------------------------
@@ -587,6 +590,7 @@ names(ce_income) <- c("not legal","medicinal use","personal use")
 round(ce_income,3)
 # not legal medicinal use  personal use 
 #    -0.005        -0.003         0.008 
+
 #-----------------------------------------------------------------------------
 # Covariate Effect of Past Use
 #-----------------------------------------------------------------------------
@@ -606,6 +610,7 @@ names(ce_pastuse) <- c("not legal","medicinal use","personal use")
 round(ce_pastuse,3)
 # not legal medicinal use  personal use 
 #    -0.129        -0.113         0.243 
+
 #-----------------------------------------------------------------------------
 # Covariate Effect of Bachelor and Above
 #-----------------------------------------------------------------------------
@@ -625,6 +630,7 @@ names(ce_bachelorabove) <- c("not legal","medicinal use","personal use")
 round(ce_bachelorabove,3)
 # not legal medicinal use  personal use 
 #    -0.045        -0.035         0.080
+
 #-----------------------------------------------------------------------------
 # Covariate Effect of Eventually Legal
 #-----------------------------------------------------------------------------
@@ -644,6 +650,7 @@ names(ce_event_legal) <- c("not legal","medicinal use","personal use")
 round(ce_event_legal,3)
 # not legal medicinal use  personal use 
 #    -0.126        -0.060         0.186 
+
 #-----------------------------------------------------------------------------
 # Covariate Effect of Other Races
 #-----------------------------------------------------------------------------
@@ -663,6 +670,7 @@ names(ce_other_race) <- c("not legal","medicinal use","personal use")
 round(ce_other_race,3)
 # not legal medicinal use  personal use 
 #     0.059         0.031        -0.089 
+
 #-----------------------------------------------------------------------------
 # Covariate Effect of Democrat
 #-----------------------------------------------------------------------------
@@ -680,6 +688,7 @@ for(i in 1:3){
 }
 names(ce_democrat) <- c("not legal","medicinal use","personal use")
 round(ce_democrat,3)
+
 # not legal medicinal use  personal use 
 #    -0.080        -0.066         0.147
 #-----------------------------------------------------------------------------
@@ -699,6 +708,7 @@ for(i in 1:3){
 }
 names(ce_other_party) <- c("not legal","medicinal use","personal use")
 round(ce_other_party,3)
+
 # not legal medicinal use  personal use 
 #    -0.070        -0.051         0.121 
 #-----------------------------------------------------------------------------
@@ -718,6 +728,7 @@ for(i in 1:3){
 }
 names(ce_liberal) <- c("not legal","medicinal use","personal use")
 round(ce_liberal,3)
+
 # not legal medicinal use  personal use 
 #    -0.068        -0.066         0.134 
 #-----------------------------------------------------------------------------
@@ -834,15 +845,6 @@ round(summary(fixef(fe_model_plm)),2) # upto two decimal places
 #  Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 #-----------------------------------------------------------------------------
-# Test for Fixed Effects
-#-----------------------------------------------------------------------------
-pFtest(fe_model_plm, pooled_effect_plm)
-
-# F test for individual effects
-# 
-# data:  invest ~ capital + value
-# F = 49.177, df1 = 9, df2 = 188, p-value < 2.2e-16
-# alternative hypothesis: significant effects
 
 #-----------------------------------------------------------------------------
 # 2.c
@@ -887,14 +889,3 @@ summary(re_model_plm)
 # Chisq: 657.674 on 2 DF, p-value: < 2.22e-16
 
 #-----------------------------------------------------------------------------
-# Hausman Test
-#-----------------------------------------------------------------------------
-phtest(fe_model_plm,re_model_plm)
-
-# Hausman Test
-# 
-# data:  invest ~ capital + value
-# chisq = 2.3304, df = 2, p-value = 0.3119
-# alternative hypothesis: one model is inconsistent
-#-----------------------------------------------------------------------------
-
