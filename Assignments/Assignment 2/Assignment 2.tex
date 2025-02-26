@@ -9,26 +9,26 @@
 \usepackage{amssymb}
 \usepackage{xcolor}
 \usepackage{booktabs} % For table resizing
-\usepackage{listings}
+% \usepackage{listings}
 
-\lstset{
-  language=R,
-  frame=single,
-  basicstyle=\ttfamily\footnotesize,
-  columns=flexible,
-  numbers=left,
-  numberstyle=\tiny,
-  stepnumber=1,
-  numbersep=10pt,
-  captionpos=b,
-  backgroundcolor=\color{white},
-%   keywordstyle=\color{blue}\bfseries,     % Keywords in blue and bold
-  stringstyle=\color{red},                % Strings in red
-  commentstyle=\color{brown},             % Comments in green
-%   morekeywords={plm,summary,pFtest},      % Highlight these custom keywords
-%   deletekeywords={data,for,effects},                 % Remove "data" from the list of keywords
-%   showstringspaces=false           % Do not underline spaces in strings
-}
+% \lstset{
+%   language=R,
+%   frame=single,
+%   basicstyle=\ttfamily\footnotesize,
+%   columns=flexible,
+%   numbers=left,
+%   numberstyle=\tiny,
+%   stepnumber=1,
+%   numbersep=10pt,
+%   captionpos=b,
+%   backgroundcolor=\color{white},
+% %   keywordstyle=\color{blue}\bfseries,     % Keywords in blue and bold
+%   stringstyle=\color{red},                % Strings in red
+%   commentstyle=\color{brown},             % Comments in green
+% %   morekeywords={plm,summary,pFtest},      % Highlight these custom keywords
+% %   deletekeywords={data,for,effects},                 % Remove "data" from the list of keywords
+% %   showstringspaces=false           % Do not underline spaces in strings
+% }
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -42,7 +42,7 @@
 \title{Econometrics Homework 2}
 \author{Utpalraj Kemprai \\
 MDS202352}
-\date{\today}
+\date{}
 
 \maketitle
 
@@ -240,15 +240,15 @@ We estimate Model 8 and replicate the results from the lecture.
     \begin{tabular}{@{}lcccc@{}}
     \toprule
     \text{Covariate} &$\Delta$ P(not legal)& $\Delta$ P(medicinal use) &$\Delta$ P(personal use)\\ \midrule
-    Age, 10 years    &  0.015          &  0.012          &  0.028   \\
+    Age, 10 years    &  0.015          &  0.012          &  -0.028   \\
     Income, \$ 10,000    &   -0.005         &   -0.003         &  0.008   \\
     Past Use    &    -0.129        &-0.113&    0.243 \\
-    Bachelors \& Above    &   -0.045         &   -0.35         &  0.080   \\
-    Eventually Legal    &       -0.126     &  -0.60          & 0.186    \\
+    Bachelors \& Above    &   -0.045         &   -0.035         &  0.080   \\
+    Eventually Legal    &       -0.126     &  -0.060          & 0.186    \\
     Other Races    &   0.059         &    0.031        & -0.089    \\
-    Democrat    &     -0.80      & -0.066          &   0.147  \\
+    Democrat    &     -0.080      & -0.066          &   0.147  \\
     Other parties    &   -0.070         &   -0.051         &  0.121   \\
-    Liberal    &   -0.68         &      -0.066      &   0.134  \\\bottomrule
+    Liberal    &   -0.068         &      -0.066      &   0.134  \\\bottomrule
     \end{tabular}
     
     \caption{Average covariate eﬀects from Model 8.}
@@ -287,8 +287,8 @@ There are 200 observation on 10 firms from 1935-1954 (20 years). We have exclude
 \end{table}
 \begin{itemize}
     \item R-Squared: 0.812
-    \item Adj. R-Squared: 0.810
-    \item F-Statistic: 426.58 with 2 and 197 df, p-value \(<0.001\) 
+    \item Adj. R-Squared: 0.811
+    \item F-Statistic: 426.58 with 2 and 197 df, p-value \(<2.22 \times 10^{-16}\) 
 \end{itemize}
 
 \textbf{Interpretation of Coefficients}
@@ -308,7 +308,7 @@ The model is able to explain about \(81.2\%\) variance in the data and the high 
         \toprule
                 & Estimate  & Std. Error  & t-value & \(\text{Pr}(>|t|)\)\\
                 \midrule
-        capital   & 0.31   & 0.017 & 18.87  & \(<0.001\)\\
+        capital   & 0.31   & 0.017 & 17.87  & \(<0.001\)\\
         value     & 0.11   & 0.012 & 9.29 & \(<0.001\)\\
         \bottomrule
     \end{tabular}
@@ -338,35 +338,39 @@ The model is able to explain about \(81.2\%\) variance in the data and the high 
 \begin{itemize}
     \item R-Squared: 0.767
     \item Adj. R-Squared: 0.753
-    \item F-Statistic: 426.58 with 2 and 188 df, p-value \(<0.001\) 
+    \item F-Statistic: 309.01 with 2 and 188 df, p-value \(<2.22 \times 10^{-16}\) 
 \end{itemize}
 
-\noindent\textbf{Test for Fixed Effects}
+% \noindent\textbf{Test for Individual Effects}
 
-\begin{lstlisting}[caption={R Code for Test for Fixed Effects}]
-#Test for Fixed Effects
-#-----------------------------------------------------------------------------
-pFtest(fe_model_plm, pooled_effect_plm)
+% \begin{lstlisting}[caption={R Code for Test for Individual Effects}]
+% #Test for Individual Effects
+% #-----------------------------------------------------------------------------
+% pFtest(fe_model_plm, pooled_effect_plm)
 
-# OUTPUT:
-# F test for individual effects
-# 
-# data:  invest ~ capital + value
-# F = 49.177, df1 = 9, df2 = 188, p-value < 2.2e-16
-# alternative hypothesis: significant effects
-\end{lstlisting}
+% # OUTPUT:
+% # F test for individual effects
+% # 
+% # data:  invest ~ capital + value
+% # F = 49.177, df1 = 9, df2 = 188, p-value < 2.2e-16
+% # alternative hypothesis: significant effects
+% \end{lstlisting}
 
-As the p-value is very small(\(<2.2\times10^{-16}\)), the null hypothesis is rejected in favor of the alternative that there are significant fixed effects. Hence, a Fixed Effect model will a better
-choice than a Pooled Effect model, in this case.
- 
+% As the p-value is very small(\(<2.2\times10^{-16}\)), the null hypothesis is rejected in favor of the alternative that there are significant fixed effects. Hence, a Fixed Effect model will be a better choice than a Pooled Effect model, in this case.
+
+
+\subsubsection*{\textbf{Firm--Specific Intercepts}}
+The firm-specific intercepts reveal interesting patterns in baseline investment behavior across companies. US Steel stands out with a significantly positive intercept (101.91), suggesting this firm maintains higher baseline investment levels compared to others, even after accounting for capital and value effects. In contrast, General Electric shows the most negative intercept (-235.57), indicating substantially lower baseline investment. The statistical significance of most intercepts (6 out of 10 firms showing p-values \(<\) 0.001) reinforces the importance of controlling for firm-specific effects when modeling investment behavior.
 
 \subsubsection*{\textbf{Interpretation of Coefficients}}
 \begin{itemize}
     \item capital:  It's coefficient is statistically significant(\(\text{p-value}<0.001\)) and has a positive value (0.31). So investment increases with increase in capital as per our Fixed Effects model.
+    
     \item value: It's coefficient is also statistically significant(\(\text{p-value}<0.001\)) and is positive (0.11). So a increase in value also increases the investment, but relatively lesser compared to capital. 
+
 \end{itemize}
 
-The model is able to explain about \(76.7\%\) of the variance in the data and the high value of the F-Statistic also shows that the variables are statistically significant. However the Fixed Effects model explains only within-firm variation only, which may not be directly comparable to the R-squared of the Pooled Effects model.
+% The model is able to explain about \(76.7\%\) of the variance in the data and the high value of the F-Statistic also shows that the variables are statistically significant. However the Fixed Effects model explains only within-firm variation only, which may not be directly comparable to the R-squared of the Pooled Effects model.
 
 \newpage
 \subsection*{(c)}
@@ -383,7 +387,7 @@ The model is able to explain about \(76.7\%\) of the variance in the data and th
     \(\theta\) &0.861\\
     \bottomrule        
     \end{tabular}    
-    \caption{Effects}
+    \caption{Variance Components of the Random Effects Model}
 \end{table}
 \begin{table}[ht]
     \centering
@@ -396,30 +400,40 @@ The model is able to explain about \(76.7\%\) of the variance in the data and th
         value     & 0.11   & 0.010 & 10.46 & \(<0.001\)\\
         \bottomrule
     \end{tabular}
-    \caption{Covariates of the Fixed Effects model}
+    \caption{Covariates of the Random Effects model}
 \end{table}
 \begin{itemize}
     \item R-Squared: 0.770
     \item Adj. R-Squared: 0.767
-    \item \(\chi^2\) Statistic: 657.67 on 2 df, p-value \(<0.001\) 
+    \item \(\chi^2\) Statistic: 657.67 on 2 df, p-value \(<2.22 \times 10^{-16}\) 
 \end{itemize}
 
-\noindent\textbf{Hausman Test}
+% \noindent\textbf{Hausman Test}
 
-\begin{lstlisting}[caption={R Code for Hausman Test}]
-# Hausman Test
-#-----------------------------------------------------------------------------
-phtest(fe_model_plm,re_model_plm)
+% \begin{lstlisting}[caption={R Code for Hausman Test}]
+% # Hausman Test
+% #-----------------------------------------------------------------------------
+% phtest(fe_model_plm,re_model_plm)
 
-# OUTPUT:
-# Hausman Test
-# 
-# data:  invest ~ capital + value
-# chisq = 2.3304, df = 2, p-value = 0.3119
-# alternative hypothesis: one model is inconsistent
-\end{lstlisting}
+% # OUTPUT:
+% # Hausman Test
+% # 
+% # data:  invest ~ capital + value
+% # chisq = 2.3304, df = 2, p-value = 0.3119
+% # alternative hypothesis: one model is inconsistent
+% \end{lstlisting}
 
-The null hypothesis cannot be rejected here (\(\text{p-value} = 0.3119\)). Hence it makes sense to use a Random Effects model instead of a Fixed Effects model.
+% The null hypothesis cannot be rejected here (\(\text{p-value} = 0.3119\)). Hence it makes sense to use a Random Effects model instead of a Fixed Effects model.
+
+\subsubsection*{\textbf{Idiosyncratic and Individual Variances}}
+\begin{itemize}
+    \item Idiosyncratic variance: Idiosyncratic variance refers to the within-firm variation. This captures how a firm's values change over time, representing the deviation from that firm's own average. This is essentially the variance of the error term after accounting for the firm-specific effects.
+    \item Individual variance: Individual variance refers to the between-firm variation. This captures how different firms vary from each other in their average level of the dependent variable (investment in your case). It represents the variation in the random intercepts across different firms.
+\end{itemize}
+
+In our Random Effects model results, the individual variance (7089.80) being much larger than the idiosyncratic variance (2784.46) tells us that differences between firms explain more of the variation in investment than changes within firms over time. The share values confirm this: 71.8\% of the total variance comes from between-firm differences, while only 28.2\% comes from within-firm variation over time.
+
+The high theta value (\(\theta\) = 0.861) further indicates the relative importance of the variation between firms in the total variation. 
 
 \subsubsection*{\textbf{Interpretation of Coefficients}}
 \begin{itemize}
@@ -427,6 +441,6 @@ The null hypothesis cannot be rejected here (\(\text{p-value} = 0.3119\)). Hence
     \item value: It's coefficient is also statistically significant (\(\text{p-value}<0.001\) and is positive (0.11). So increase in value also increases the investment but has a smaller effect than capital.
 \end{itemize}
 
-The R-Squared for the Random Effects model is similar to the Fixed Effects model (0.770). It accounts for both the within-firm and between-firm variation, so is not directly comparable with the R-Squared of the Fixed Effects model and Pooled Effects model. Moreover \(86.1\%\) (\(\theta = 0.861\)) of the variation in the dependent variable is due to individual-specific effects rather than the idiosyncratic error term.
+% The R-Squared for the Random Effects model is similar to the Fixed Effects model (0.770). It accounts for both the within-firm and between-firm variation, so is not directly comparable with the R-Squared of the Fixed Effects model and Pooled Effects model. Moreover \(86.1\%\) (\(\theta = 0.861\)) of the variation in the dependent variable is due to individual-specific effects rather than the idiosyncratic error term.
 
 \end{document}
