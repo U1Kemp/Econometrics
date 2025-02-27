@@ -889,3 +889,37 @@ summary(re_model_plm)
 # Chisq: 657.674 on 2 DF, p-value: < 2.22e-16
 
 #-----------------------------------------------------------------------------
+# Additional Analysis
+#-----------------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------
+#Test for Individual Effects
+#-----------------------------------------------------------------------------
+pFtest(fe_model_plm, pooled_effect_plm)
+
+# OUTPUT:
+# F test for individual effects
+# 
+# data:  invest ~ capital + value
+# F = 49.177, df1 = 9, df2 = 188, p-value < 2.2e-16
+# alternative hypothesis: significant effects
+
+# As the p-value is very small(\(<2.2\times10^{-16}\)), the null
+# hypothesis is rejected in favor of the alternative that there are 
+# significant individual effects. Hence, a Fixed Effect model will be 
+# a better choice than a Pooled Effect model, in this case.
+#-----------------------------------------------------------------------------
+# Hausman Test
+#-----------------------------------------------------------------------------
+phtest(fe_model_plm,re_model_plm)
+
+# OUTPUT:
+# Hausman Test
+# 
+# data:  invest ~ capital + value
+# chisq = 2.3304, df = 2, p-value = 0.3119
+# alternative hypothesis: one model is inconsistent
+
+# The null hypothesis cannot be rejected here, as (\(\text{p-value} = 0.3119\)). 
+# Hence it makes sense to use a Random Effects model instead of a Fixed Effects model.
+#-----------------------------------------------------------------------------

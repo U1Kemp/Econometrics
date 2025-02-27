@@ -9,26 +9,29 @@
 \usepackage{amssymb}
 \usepackage{xcolor}
 \usepackage{booktabs} % For table resizing
-% \usepackage{listings}
+\usepackage{listings}
+\usepackage{titling}
+\renewcommand\maketitlehooka{\null\mbox{}\vfill}
+\renewcommand\maketitlehookd{\vfill\null}
 
-% \lstset{
-%   language=R,
-%   frame=single,
-%   basicstyle=\ttfamily\footnotesize,
-%   columns=flexible,
-%   numbers=left,
-%   numberstyle=\tiny,
-%   stepnumber=1,
-%   numbersep=10pt,
-%   captionpos=b,
-%   backgroundcolor=\color{white},
-% %   keywordstyle=\color{blue}\bfseries,     % Keywords in blue and bold
-%   stringstyle=\color{red},                % Strings in red
-%   commentstyle=\color{brown},             % Comments in green
-% %   morekeywords={plm,summary,pFtest},      % Highlight these custom keywords
-% %   deletekeywords={data,for,effects},                 % Remove "data" from the list of keywords
-% %   showstringspaces=false           % Do not underline spaces in strings
-% }
+\lstset{
+  language=R,
+  frame=single,
+  basicstyle=\ttfamily\footnotesize,
+  columns=flexible,
+  numbers=left,
+  numberstyle=\tiny,
+  stepnumber=1,
+  numbersep=10pt,
+  captionpos=b,
+  backgroundcolor=\color{white},
+%   keywordstyle=\color{blue}\bfseries,     % Keywords in blue and bold
+  stringstyle=\color{red},                % Strings in red
+  commentstyle=\color{blue},             % Comments in green
+%   morekeywords={plm,summary,pFtest},      % Highlight these custom keywords
+%   deletekeywords={data,for,effects},                 % Remove "data" from the list of keywords
+%   showstringspaces=false           % Do not underline spaces in strings
+}
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -39,12 +42,14 @@
 
 \begin{document}
 
-\title{Econometrics Homework 2}
-\author{Utpalraj Kemprai \\
-MDS202352}
+\title{\huge Econometrics Homework 2}
+\author{\LARGE Utpalraj Kemprai \\[5pt]
+\LARGE MDS202352}
 \date{}
 
-\maketitle
+\begin{titlingpage}
+    \maketitle
+\end{titlingpage}
 
 \newpage
 
@@ -135,7 +140,7 @@ Rescaling the parameters $(\gamma_j,\beta)$ and the scale of the distribution of
               &= Pr(\gamma_{j-1} - x'_i\beta < \frac{\epsilon_i}{d} \leq \gamma_j - x'_i\beta)\\
               &= \Phi(\gamma_j - x'_i\beta) - \Phi(\gamma_{j-1} - x'_i\beta) & [\text{as } \epsilon_i \sim N(0,d^2), \frac{\epsilon_i}{d} \sim N(0,1)]
 \end{align*}
-which is the same as the value obtained in part(b) of Question 1. So rescaling the parameters $(\gamma_j,\beta)$ and the scale of the distribution by some arbitrary constant $d$ lead to same outcome probabilities.
+which is the same as the value obtained in part(a) of Question 1. So rescaling the parameters $(\gamma_j,\beta)$ and the scale of the distribution by some arbitrary constant $d$ lead to same outcome probabilities.
 
 \subsubsection*{Identification problem}
 This identification problem can be solved by fixing the scale of the distribution of $\epsilon_i$. In particular we can set the scale of the distribution of $\epsilon_i$ to 1, i.e. var($\epsilon_i$) = 1.
@@ -341,22 +346,22 @@ The model is able to explain about \(81.2\%\) variance in the data and the high 
     \item F-Statistic: 309.01 with 2 and 188 df, p-value \(<2.22 \times 10^{-16}\) 
 \end{itemize}
 
-% \noindent\textbf{Test for Individual Effects}
+\noindent\textbf{Test for Individual Effects}
 
-% \begin{lstlisting}[caption={R Code for Test for Individual Effects}]
-% #Test for Individual Effects
-% #-----------------------------------------------------------------------------
-% pFtest(fe_model_plm, pooled_effect_plm)
+\begin{lstlisting}[caption={R Code for Test for Individual Effects}]
+#Test for Individual Effects
+#-----------------------------------------------------------------------------
+pFtest(fe_model_plm, pooled_effect_plm)
 
-% # OUTPUT:
-% # F test for individual effects
-% # 
-% # data:  invest ~ capital + value
-% # F = 49.177, df1 = 9, df2 = 188, p-value < 2.2e-16
-% # alternative hypothesis: significant effects
-% \end{lstlisting}
+# OUTPUT:
+# F test for individual effects
+# 
+# data:  invest ~ capital + value
+# F = 49.177, df1 = 9, df2 = 188, p-value < 2.2e-16
+# alternative hypothesis: significant effects
+\end{lstlisting}
 
-% As the p-value is very small(\(<2.2\times10^{-16}\)), the null hypothesis is rejected in favor of the alternative that there are significant fixed effects. Hence, a Fixed Effect model will be a better choice than a Pooled Effect model, in this case.
+As the p-value is very small(\(<2.2\times10^{-16}\)), the null hypothesis is rejected in favor of the alternative that there are significant fixed effects. Hence, a Fixed Effect model will be a better choice than a Pooled Effect model, in this case.
 
 
 \subsubsection*{\textbf{Firm--Specific Intercepts}}
@@ -372,7 +377,7 @@ The firm-specific intercepts reveal interesting patterns in baseline investment 
 
 % The model is able to explain about \(76.7\%\) of the variance in the data and the high value of the F-Statistic also shows that the variables are statistically significant. However the Fixed Effects model explains only within-firm variation only, which may not be directly comparable to the R-squared of the Pooled Effects model.
 
-\newpage
+% \newpage
 \subsection*{(c)}
 \textbf{Random Effects model}
 \begin{table}[ht]
@@ -383,9 +388,9 @@ The firm-specific intercepts reveal interesting patterns in baseline investment 
             \midrule
     idiosyncratic & 2784.46 & 52.77 & 0.282 \\
     individual    & 7089.80 & 84.20 & 0.718 \\
-    \midrule
-    \(\theta\) &0.861\\
-    \bottomrule        
+    \bottomrule
+    \(\theta\) = 0.861\\
+    % \bottomrule        
     \end{tabular}    
     \caption{Variance Components of the Random Effects Model}
 \end{table}
@@ -408,22 +413,22 @@ The firm-specific intercepts reveal interesting patterns in baseline investment 
     \item \(\chi^2\) Statistic: 657.67 on 2 df, p-value \(<2.22 \times 10^{-16}\) 
 \end{itemize}
 
-% \noindent\textbf{Hausman Test}
+\noindent\textbf{Hausman Test}
 
-% \begin{lstlisting}[caption={R Code for Hausman Test}]
-% # Hausman Test
-% #-----------------------------------------------------------------------------
-% phtest(fe_model_plm,re_model_plm)
+\begin{lstlisting}[caption={R Code for Hausman Test}]
+# Hausman Test
+#-----------------------------------------------------------------------------
+phtest(fe_model_plm,re_model_plm)
 
-% # OUTPUT:
-% # Hausman Test
-% # 
-% # data:  invest ~ capital + value
-% # chisq = 2.3304, df = 2, p-value = 0.3119
-% # alternative hypothesis: one model is inconsistent
-% \end{lstlisting}
+# OUTPUT:
+# Hausman Test
+# 
+# data:  invest ~ capital + value
+# chisq = 2.3304, df = 2, p-value = 0.3119
+# alternative hypothesis: one model is inconsistent
+\end{lstlisting}
 
-% The null hypothesis cannot be rejected here (\(\text{p-value} = 0.3119\)). Hence it makes sense to use a Random Effects model instead of a Fixed Effects model.
+The null hypothesis cannot be rejected here (\(\text{p-value} = 0.3119\)). Hence it makes sense to use a Random Effects model instead of a Fixed Effects model.
 
 \subsubsection*{\textbf{Idiosyncratic and Individual Variances}}
 \begin{itemize}
