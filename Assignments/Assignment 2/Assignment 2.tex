@@ -111,7 +111,7 @@ The likelihood function for the ordinal logit model is,
 
 \subsubsection*{Probability remain unchanged on adding a constant c to cut-points and the mean}
 
-If we add a constant $c$ to the cut-points $\gamma_j$ and the means $x'_i\beta$, then $\forall j = 1,2,\cdots, J-1$ and $\forall i = 1,2,\cdots, n$,  the latent variable $z_i$ becomes $x'_i\beta + c + \epsilon_i$ and the cut-point $\gamma_j$ becomes $\gamma_j + c$.
+Consider the ordinal probit model. If we add a constant $c$ to the cut-points $\gamma_j$ and the means $x'_i\beta$, then $\forall j = 1,2,\cdots, J-1$ and $\forall i = 1,2,\cdots, n$,  the latent variable $z_i$ becomes $x'_i\beta + c + \epsilon_i$ and the cut-point $\gamma_j$ becomes $\gamma_j + c$.
 \vspace{0.25cm}
 
 \noindent The probability of $y_i$ taking the value $j$ is,
@@ -130,7 +130,7 @@ This identification problem can be solved by fixing the value of one of $\gamma_
 
 \subsubsection*{Rescaling the parameters $(\gamma_j,\beta)$ and scale of distribution does not change outcome probability}
 
-Rescaling the parameters $(\gamma_j,\beta)$ and the scale of the distribution of $\epsilon_i$ by some constant $d > 0$, the latent variable $z_i$ becomes $x'_id\beta + \epsilon_i$ where $\epsilon_i \sim N(0,d^2)$, $\forall i = 1,2,\cdots,n$ and the cut-point $\gamma_j$ becomes $d\gamma_j, \forall j = 1, 2, \cdots, J-1$.
+Consider the ordinal probit model. Rescaling the parameters $(\gamma_j,\beta)$ and the scale of the distribution of $\epsilon_i$ by some constant $d > 0$, the latent variable $z_i$ becomes $x'_id\beta + \epsilon_i$ where $\epsilon_i \sim N(0,d^2)$, $\forall i = 1,2,\cdots,n$ and the cut-point $\gamma_j$ becomes $d\gamma_j, \forall j = 1, 2, \cdots, J-1$.
 \vspace{0.25cm}
 
 \noindent The probability of $y_i$ taking the value $j$ is,
@@ -205,7 +205,7 @@ We estimate Model 8 and replicate the results from the lecture.
     \centering
     \begin{tabular}{@{}lrrrr@{}}
     \toprule
-    \text{coef} & \text{Estimate}    & \text{Std. Error} &\text{t value} &\text{p value} \\ 
+    \text{} & \text{Estimate}    & \text{Std. Error} &\text{t value} &\text{p value} \\ 
     \midrule
     intercept        & 0.35        &0.48    &0.72  &0.47\\
     log\_age          & -0.35      & 0.08   & -4.51 &  $< 0.05$\\
@@ -288,7 +288,7 @@ There are 200 observation on 10 firms from 1935-1954 (20 years). We have exclude
         value     & 0.12   & 0.006 & 19.80 & \(<0.001\)\\
         \bottomrule
     \end{tabular}
-    \caption{Covariates of the Pooled Effects model}
+    \caption{Coefficient Estimates for the Pooled Effects model}
 \end{table}
 \begin{itemize}
     \item R-Squared: 0.812
@@ -298,8 +298,8 @@ There are 200 observation on 10 firms from 1935-1954 (20 years). We have exclude
 
 \textbf{Interpretation of Coefficients}
 \begin{itemize}
-    \item capital: It's coefficient is statistically significant(\(\text{p-value}<0.001\)) and has a positive value (0.23). So investment increases with increase in capital as per our Pooled Effects model.
-    \item value: It's coefficient is also statistically significant(\(\text{p-value}<0.001\)) and is positive (0.12). So a increase in value also increases the investment, but relatively lesser compared to capital. 
+    \item capital: It's coefficient is statistically significant(\(\text{p-value}<0.001\)) and has a positive value (0.23). So investment increases with increase in capital as per our Pooled Effects model. To be more precise, a 100\$ increase in capital is associated with a 23\$ increase in investment, holding other factors constant.
+    \item value: It's coefficient is also statistically significant(\(\text{p-value}<0.001\)) and is positive (0.12). So a increase in value also increases the investment, but relatively lesser compared to capital. A 100\$ increase in value is associated with a 12\$ increase in investment, holding other factors constant.
 \end{itemize}
 
 The model is able to explain about \(81.2\%\) variance in the data and the high value of the F-Statistic also shows that the variables are statistically significant.
@@ -317,7 +317,7 @@ The model is able to explain about \(81.2\%\) variance in the data and the high 
         value     & 0.11   & 0.012 & 9.29 & \(<0.001\)\\
         \bottomrule
     \end{tabular}
-    \caption{Covariates of the Fixed Effects model}
+    \caption{Coefficient Estimates of the Fixed Effects model}
 \end{table}
 
 \begin{table}[ht]
@@ -337,7 +337,7 @@ The model is able to explain about \(81.2\%\) variance in the data and the high 
     Westinghouse        & -57.55  & 13.99 & -4.11  & $<0.001$  \\
     \bottomrule
     \end{tabular}
-    \caption{Firm specific intercepts}
+    \caption{Estimates for Firm specific intercepts}
 \end{table}
     
 \begin{itemize}
@@ -369,9 +369,9 @@ The firm-specific intercepts reveal interesting patterns in baseline investment 
 
 \subsubsection*{\textbf{Interpretation of Coefficients}}
 \begin{itemize}
-    \item capital:  It's coefficient is statistically significant(\(\text{p-value}<0.001\)) and has a positive value (0.31). So investment increases with increase in capital as per our Fixed Effects model.
+    \item capital:  It's coefficient is statistically significant(\(\text{p-value}<0.001\)) and has a positive value (0.31). So investment increases with increase in capital as per our Fixed Effects model. More precisely, a 100\$ increase in capital is associated with a 31\$ increase in investment, holding other factors constant.
     
-    \item value: It's coefficient is also statistically significant(\(\text{p-value}<0.001\)) and is positive (0.11). So a increase in value also increases the investment, but relatively lesser compared to capital. 
+    \item value: It's coefficient is also statistically significant(\(\text{p-value}<0.001\)) and is positive (0.11). So a increase in value also increases the investment, but relatively lesser compared to capital. A 100\$ increase in value is associated with a 11\$ increase in investment, holding all other factors constant.
 
 \end{itemize}
 
@@ -405,7 +405,7 @@ The firm-specific intercepts reveal interesting patterns in baseline investment 
         value     & 0.11   & 0.010 & 10.46 & \(<0.001\)\\
         \bottomrule
     \end{tabular}
-    \caption{Covariates of the Random Effects model}
+    \caption{Coefficient Estimates of the Random Effects model}
 \end{table}
 \begin{itemize}
     \item R-Squared: 0.770
@@ -442,8 +442,8 @@ The high theta value (\(\theta\) = 0.861) further indicates the relative importa
 
 \subsubsection*{\textbf{Interpretation of Coefficients}}
 \begin{itemize}
-    \item capital: It's coefficient is statistically significant (\(\text{p-value}<0.001\)) and is positive (0.31). So increase in capital increases the investment as per our Random Effects model.
-    \item value: It's coefficient is also statistically significant (\(\text{p-value}<0.001\) and is positive (0.11). So increase in value also increases the investment but has a smaller effect than capital.
+    \item capital: It's coefficient is statistically significant (\(\text{p-value}<0.001\)) and is positive (0.31). So increase in capital leads to increase in investment as per our Random Effects model. A 100\$ increase in capital is associated with a 31\$ increase in investment, holding all other factors constant.
+    \item value: It's coefficient is also statistically significant (\(\text{p-value}<0.001\) and is positive (0.11). So increase in value also increases the investment but has a smaller effect than capital. More precisely, a 100\$ increase in value is associated with a 11\$ increase in investment, holding other factors constant.
 \end{itemize}
 
 % The R-Squared for the Random Effects model is similar to the Fixed Effects model (0.770). It accounts for both the within-firm and between-firm variation, so is not directly comparable with the R-Squared of the Fixed Effects model and Pooled Effects model. Moreover \(86.1\%\) (\(\theta = 0.861\)) of the variation in the dependent variable is due to individual-specific effects rather than the idiosyncratic error term.
