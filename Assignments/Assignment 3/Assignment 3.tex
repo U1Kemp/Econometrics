@@ -331,17 +331,74 @@ Given \(Y_i (i = 1,\cdots, n)\) are i.i.d EXP(\(\theta\)), where the pdf of \(y\
 \[f(y_i|\theta) = \frac{1}{\theta} \exp(-\frac{y_i}{\theta})\]
 
 \subsection*{Part(a)}
-Jeffrey's prior for \(\theta\) is the square root of the information number of \(theta\), \(I(\theta)\).
+Jeffrey's prior for \(\theta\) is the square root of the information number of \(\theta\), \(I(\theta)\).
 
 Now,
 \begin{align*}
     I(\theta) &= E \left[\left(\frac{\partial}{\partial \theta } \log(f(y|\theta))\right)^2\right]\\
-    &= E \left[\left(\frac{\partial}{\partial \theta } \log\left(\prod_{i=1}^{n}\frac{1}{\theta}\exp\left(-\frac{y_i}{\theta}\right)\right)\right)^2\right]\\
-    &= E \left[\left(\frac{\partial}{\partial \theta } \log\left(\frac{1}{\theta^n}\exp\left(-\sum_{i=1}^{n}\frac{y_i}{\theta}\right)\right)\right)^2\right]\\
-    &= E \left[\left(\frac{\partial}{\partial \theta }\left(-n\log\theta - \sum_{i=1}^{n}\frac{y_i}{\theta}\right) \right)^2\right]\\
-    &= E \left[\left( -\frac{n}{\theta} + \frac{1}{\theta^2} \sum_{i=1}^{n}y_i\right)^2\right]\\
-    &= E \left[\frac{n^2}{\theta^2} - 2 \frac{n}{\theta^3}\sum_{i=1}^{n}y_i + \frac{1}{\theta^4}\left(\sum_{i=1}^{n}y_i\right)^2\right]\\
-    &= \frac{n^2}{\theta^2} + 2 \frac{n}{\theta^3}\sum_{i=1}^{n} E[y_i] + \frac{1}{\theta^4} E\left[\left(\sum_{i=1}^{n}y_i\right)^2\right]
+    &= E \left[\left(\frac{\partial}{\partial \theta } \log\left(\frac{1}{\theta}\exp\left(\frac{-y}{\theta}\right)\right)\right)^2\right] \\
+    &=E \left[\left(\frac{\partial}{\partial \theta }\left(-\log\theta- \frac{y}{\theta}\right)\right)^2\right]\\
+    &=E \left[\left(-\frac{1}{\theta}+ \frac{y}{\theta^2}\right)^2\right]\\
+    &=E \left[\frac{1}{\theta^2} - 2\frac{y}{\theta^3} + \frac{y^2}{\theta^4}\right]\\
+    &= \frac{1}{\theta^2} - \frac{2}{\theta^3} E[y] + \frac{1}{\theta^4} E[y^2]\\
+    &= \frac{1}{\theta^2} - \frac{2}{\theta^3} \theta + \frac{1}{\theta^4} 2\theta^2\\
+    &= \frac{1}{\theta^2}
 \end{align*}
+
+Therefore, the Jeffrey's prior for \(\theta\) is,
+\begin{align*}
+    \pi(\theta) &\varpropto \sqrt{I(\theta)}\\
+    &\varpropto \sqrt{\frac{1}{\theta^2}}\\
+    &\varpropto \frac{1}{\theta}
+\end{align*}
+
+\subsection*{Part(b)}
+For \(\alpha = \theta^{-1}\), the pdf of \(y\) can be written as 
+\[
+    f(y|\alpha) = \alpha \exp(-\alpha y)
+\]
+The information number of \(\alpha\) is 
+\begin{align*}
+    I(\alpha) &= E \left[\left(\frac{\partial}{\partial \theta } \log(f(y|\alpha))\right)^2\right]\\
+    &= E \left[\left(\frac{\partial}{\partial \alpha } \log\left(\alpha\exp\left(-\alpha y\right)\right)\right)^2\right]\\
+    &= E \left[\left(\frac{1}{\alpha} -y \right)^2\right]\\
+    &= E \left[\frac{1}{\alpha^2} -2 \frac{y}{\alpha} + y^2\right]\\
+    &= \frac{1}{\alpha^2} - \frac{2}{\alpha} E[y] + E[y^2]\\
+    &= \frac{1}{\alpha^2} - \frac{2}{\alpha^2} + \frac{2}{\alpha^2}\\
+    &= \frac{1}{\alpha^2}
+\end{align*}
+
+Therefore, the Jeffrey's prior for \(\alpha\) is,
+
+\begin{align*}
+    \pi(\alpha) &\varpropto \sqrt{I(\alpha)}\\
+    &\varpropto \sqrt{\frac{1}{\alpha^2}}\\
+    &\varpropto \frac{1}{\alpha}
+\end{align*}
+
+\subsection*{Part(c)}
+
+The posterior density of \(\theta\) corresponding to the prior density in (a) is,
+
+\begin{align*}
+    \pi(\theta|y) &\varpropto \left(\prod_{i=1}^{n}\frac{1}{\theta}\exp\left(-\frac{y_i}{\theta}\right)\right) \times \frac{1}{\theta}\\
+    &\varpropto \frac{1}{\theta^{n+1}}\exp\left(-\frac{1}{\theta}\sum_{i=1}^{n}y_i\right)
+\end{align*}
+
+Where the last expression is the kernel of a Inverse Gamma distribution with shape parameter \(n\) and scale parameter \(\sum_{i=1}^{n}y_i\).
+
+So, the posterior distribution of \(\theta\) is \(\text{IG}(n,\sum_{i=1}^{n}y_i)\).
+
+\newpage
+
+\section*{Question 5}
+We are given the multiple linear regression model
+\[y_i = x'_i\beta + \epsilon_i,\] 
+where \(\epsilon_i|x_i\sim N(0,\sigma^2)\) for all \(i=1,\cdots,n\). The priors on \((\beta,\sigma^2)\) are independent and \(\pi(\beta, \sigma^2) = \pi(\beta)\pi(\sigma^2) = N_k(\beta_0,B_0)\text{IG}(\frac{\alpha_0}{2},\frac{\delta_0}{2})\).
+
+\subsection*{Part(a)}
+
+
+\subsection*{Part(b)}
 
 \end{document}
