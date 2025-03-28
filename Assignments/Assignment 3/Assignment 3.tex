@@ -125,9 +125,9 @@ We wish to show that it is the conjugate prior for the Uniform distribution.
 
 From Bayes' Theorem,
 \begin{align*}
-    \pi(\theta|y) &\varpropto f(y|\theta) \pi(\theta) 
+    \pi(\theta|y) &\propto f(y|\theta) \pi(\theta) 
                 = \frac{1}{\theta} \times a k^{a} \theta^{-(a+1)} I(\theta \geq k) \\
-    \implies \pi(\theta|y) &\varpropto a k^{a} \theta^{-(a+2)} I(\theta \geq k)
+    \implies \pi(\theta|y) &\propto a k^{a} \theta^{-(a+2)} I(\theta \geq k)
 \end{align*}
 
 From the last expression we can see that \(\pi(\theta|y)\) is proportional to the kernel of the Pareto distribution. Hence the Pareto distribution is a conjugate prior distribution for the uniform distribution.
@@ -151,7 +151,7 @@ So, \(L(\theta|y)\) is maximized at \(\theta = \max (y_1, y_2, \cdots, y_n)\).
 From part (a),
 
 \[
-\pi(\theta|y)  \varpropto a k^{a} \theta^{-(a+2)} I(\theta \geq k)
+\pi(\theta|y)  \propto a k^{a} \theta^{-(a+2)} I(\theta \geq k)
 \]
 
 \vspace{0.25cm}
@@ -215,9 +215,9 @@ where \(y_i\) corresponds to the number of times the number \(i\) shows up in \(
 
 From Bayes' Theorem,
 \begin{align*}
-    \pi(\theta|y) &\varpropto f(y|\theta) \pi(\theta)\\
-    &\varpropto \prod_{i=1}^{6} \theta_i^{y_i} \times 11! \prod_{i=1}^{6} \theta_i\\
-    &\varpropto \prod_{i=1}^{6} \theta_i^{y_i + 1}
+    \pi(\theta|y) &\propto f(y|\theta) \pi(\theta)\\
+    &\propto \prod_{i=1}^{6} \theta_i^{y_i} \times 11! \prod_{i=1}^{6} \theta_i\\
+    &\propto \prod_{i=1}^{6} \theta_i^{y_i + 1}
 \end{align*}
 
 So \(\pi(\theta|y)\) is proportional to the kernel of the Dirichlet distribution, so \(\theta|y \sim D(y_1+2,y_2+2, \cdots, y_6+2)\).
@@ -347,9 +347,9 @@ Now,
 
 Therefore, the Jeffrey's prior for \(\theta\) is,
 \begin{align*}
-    \pi(\theta) &\varpropto \sqrt{I(\theta)}\\
-    &\varpropto \sqrt{\frac{1}{\theta^2}}\\
-    &\varpropto \frac{1}{\theta}
+    \pi(\theta) &\propto \sqrt{I(\theta)}\\
+    &\propto \sqrt{\frac{1}{\theta^2}}\\
+    &\propto \frac{1}{\theta}
 \end{align*}
 
 \subsection*{Part(b)}
@@ -371,9 +371,9 @@ The information number of \(\alpha\) is
 Therefore, the Jeffrey's prior for \(\alpha\) is,
 
 \begin{align*}
-    \pi(\alpha) &\varpropto \sqrt{I(\alpha)}\\
-    &\varpropto \sqrt{\frac{1}{\alpha^2}}\\
-    &\varpropto \frac{1}{\alpha}
+    \pi(\alpha) &\propto \sqrt{I(\alpha)}\\
+    &\propto \sqrt{\frac{1}{\alpha^2}}\\
+    &\propto \frac{1}{\alpha}
 \end{align*}
 
 \subsection*{Part(c)}
@@ -381,8 +381,8 @@ Therefore, the Jeffrey's prior for \(\alpha\) is,
 The posterior density of \(\theta\) corresponding to the prior density in (a) is,
 
 \begin{align*}
-    \pi(\theta|y) &\varpropto \left(\prod_{i=1}^{n}\frac{1}{\theta}\exp\left(-\frac{y_i}{\theta}\right)\right) \times \frac{1}{\theta}\\
-    &\varpropto \frac{1}{\theta^{n+1}}\exp\left(-\frac{1}{\theta}\sum_{i=1}^{n}y_i\right)
+    \pi(\theta|y) &\propto \left(\prod_{i=1}^{n}\frac{1}{\theta}\exp\left(-\frac{y_i}{\theta}\right)\right) \times \frac{1}{\theta}\\
+    &\propto \frac{1}{\theta^{n+1}}\exp\left(-\frac{1}{\theta}\sum_{i=1}^{n}y_i\right)
 \end{align*}
 
 Where the last expression is the kernel of a Inverse Gamma distribution with shape parameter \(n\) and scale parameter \(\sum_{i=1}^{n}y_i\).
@@ -396,9 +396,72 @@ We are given the multiple linear regression model
 \[y_i = x'_i\beta + \epsilon_i,\] 
 where \(\epsilon_i|x_i\sim N(0,\sigma^2)\) for all \(i=1,\cdots,n\). The priors on \((\beta,\sigma^2)\) are independent and \(\pi(\beta, \sigma^2) = \pi(\beta)\pi(\sigma^2) = N_k(\beta_0,B_0)\text{IG}(\frac{\alpha_0}{2},\frac{\delta_0}{2})\).
 
+\vspace{0.25cm}
+
+Clearly, \(y_i \sim N(x'_i\beta, \sigma^2)\) for \(i = 1, \cdots, n\). So the likelihood is 
+\begin{align*}
+    f(y|\beta,\sigma^2) &= \prod_{i=1}^{n} \frac{1}{\sigma\sqrt{2\pi}}\exp\left(-\frac{(y_i - x'_i\beta)^2}{2\sigma^2}\right)\\
+    &= (2\pi\sigma^2)^{-\frac{n}{2}}\exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(y_i - x'_i\beta)^2\right)\\
+    &\propto \sigma^{-n}\exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(y_i - x'_i\beta)^2\right) = \sigma^{-n}\exp\left(-\frac{1}{2\sigma^2}(y - X\beta)'(y-X\beta)\right)
+\end{align*}
+
+So the posterior distribution of \((\beta,\sigma^2)\) is
+\begin{align*}
+    \pi(\beta,\sigma^2|y) &\propto f(y|\beta,\sigma^2)\pi(\beta,\sigma^2)\\
+    &\propto f(y|\beta,\sigma^2)\pi(\beta)\pi(\sigma^2)\\
+    &\propto \left(\frac{1}{\sigma^2}\right)^{\frac{n}{2}}\exp\left(-\frac{1}{2\sigma^2}(y - X\beta)'(y-X\beta)\right) \exp\left(-\frac{1}{2}(\beta - \beta_0)'B_0^{-1}(\beta - \beta_0)\right) \\
+    &\quad \times \left(\frac{1}{\sigma^2}\right)^{\frac{\alpha_0}{2} + 1}\exp\left(-\frac{\delta_0}{2\sigma^2}\right)\\
+    &\propto \left(\frac{1}{\sigma^2}\right)^{\frac{(n+\alpha_0)}{2}+1}\exp\left(-\frac{\delta_0}{2\sigma^2}\right)\exp\left(-\frac{1}{2\sigma^2}(y - X\beta)'(y-X\beta)\right) \\
+    & \quad \times \exp\left(-\frac{1}{2}(\beta - \beta_0)'B_0^{-1}(\beta - \beta_0)\right)
+\end{align*}
+
+
 \subsection*{Part(a)}
 
+We want to find $\pi(\beta | \sigma^2, y)$. We can ignore terms that don't involve $\beta$ in \(\pi(\beta,\sigma^2|y)\):
+    \begin{align*}
+        \pi(\beta | \sigma^2, y) &\propto \exp\left(-\frac{1}{2\sigma^2}(y - X\beta)'(y - X\beta)\right) \exp\left(-\frac{1}{2}(\beta - \beta_0)' B_0^{-1} (\beta - \beta_0)\right)\\
+        &\propto \exp\left(-\frac{1}{2}\left(\frac{1}{\sigma^2}(y - X\beta)'(y - X\beta)+(\beta - \beta_0)' B_0^{-1} (\beta - \beta_0)\right)\right)
+    \end{align*}
+    
+    Expand the quadratic terms :
+    $$\frac{1}{\sigma^2}(y - X\beta)'(y - X\beta) = \frac{1}{\sigma^2}\left(\beta' X' X \beta - 2\beta' X' y + y'y\right) $$
+    $$(\beta - \beta_0)' B_0^{-1} (\beta - \beta_0) = \beta' B_0^{-1} \beta - 2\beta' B_0^{-1} \beta_0 + \beta_0' B_0^{-1} \beta_0$$
+
+    Adding the above two, we get:
+    \begin{align*}
+        \frac{1}{\sigma^2}(y - X\beta)'(y - X\beta)+(\beta - \beta_0)' B_0^{-1} (\beta - \beta_0) =  \beta' \left(\frac{1}{\sigma^2} X' X + B_0^{-1}\right) \beta - 2\beta'\left(\frac{1}{\sigma^2} X' y + B_0^{-1} \beta_0\right) \\
+    + y'y + \beta_0'B_0^{-1}\beta_0
+    \end{align*}
+
+
+    Substituting this, we get:
+    \begin{align*}
+        \pi(\beta | \sigma^2, y) &\propto \exp\left(-\frac{1}{2} \left[ \beta' \left(\frac{1}{\sigma^2} X' X + B_0^{-1}\right) \beta - 2\beta'\left(\frac{1}{\sigma^2} X' y + B_0^{-1} \beta_0\right) + y'y + \beta_0'B_0^{-1}\beta_0 \right]\right)\\
+        & \propto \exp\left(-\frac{1}{2} \left[ \beta' \left(\frac{1}{\sigma^2} X' X + B_0^{-1}\right) \beta - 2\beta' \left(\frac{1}{\sigma^2} X' y + B_0^{-1} \beta_0\right) \right] \right)
+    \end{align*}
+
+    Let $B_1^{-1} = \frac{1}{\sigma^2} X' X + B_0^{-1}$ and $\bar{\beta} = B_1 \left(\frac{1}{\sigma^2} X' y + B_0^{-1} \beta_0\right)$. Then:
+    $$\pi(\beta | \sigma^2, y) \propto \exp\left(-\frac{1}{2} (\beta - \bar{\beta})' B_1^{-1} (\beta - \bar{\beta}) \right)$$
+    So, the conditional posterior distribution of \(\beta\) is proportional to the kernel of the Normal distribution.
+
+    Therefore, we have:
+    $$\pi(\beta | \sigma^2, y) \sim N_k(\bar{\beta}, B_1)$$
+    
+    where $B_1 = \left(\frac{1}{\sigma^2} X' X + B_0^{-1}\right)^{-1}$ and $\bar{\beta} = B_1 \left(\frac{1}{\sigma^2} X' y + B_0^{-1} \beta_0\right)$.
 
 \subsection*{Part(b)}
+
+    We want to find $\pi(\sigma^2 | \beta, y)$. Again, ignore terms that don't involve $\sigma^2$:
+   
+    $$\pi(\sigma^2 | \beta, y) \propto \left(\frac{1}{\sigma^2}\right)^{\frac{\alpha_0 + n}{2} + 1} \exp\left(-\frac{1}{2\sigma^2} \left[ \delta_0 + (y - X\beta)'(y - X\beta) \right] \right)$$
+
+    Let \(\alpha_1 = \alpha_0 + n\) and \(\delta_1 = \delta_0 + (y-X\beta)'(y-X\beta)\). Then:
+
+    $$\pi(\sigma^2|\beta,y) \propto \left(\frac{1}{\sigma^2}\right)^{\frac{\alpha_1}{2}+1} \exp\left(-\frac{\delta_1}{2\sigma^2}\right)$$
+
+    So the conditional posterior distribution of \(\sigma^2\) is proportional to the kernel of a Inverse Gamma distribution with shape parameter \(\frac{\alpha_1}{2}\) and scale parameter \(\frac{\delta_1}{2}\).
+    Therefore, we have:
+    $$\pi(\sigma^2 | \beta, y) \sim \text{IG}\left(\frac{\alpha_1}{2}, \frac{\delta_1}{2}\right)$$
 
 \end{document}
