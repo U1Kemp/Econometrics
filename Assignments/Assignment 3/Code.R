@@ -21,10 +21,10 @@ plot_beta <- function(alpha, beta, title = "Beta Distribution", color = "blue", 
 }
 
 # plot for n = 1000, overlaying the previous plot.
-plot_beta(alpha = 192, beta = 818, title = "Posterior Distributions", color = "red")
+plot_beta(alpha = 192, beta = 820, title = "Posterior Distributions", color = "red")
 
 # Plot for n = 100
-plot_beta(alpha = 21, beta = 89, color = "blue", add = TRUE)
+plot_beta(alpha = 21, beta = 91, color = "blue", add = TRUE)
 
 #add legend
 legend("topright", legend = c("n=100", "n=1000"), col = c("blue", "red"), lty = 1)
