@@ -1,3 +1,7 @@
+# ------------------------------------------------------------------
+# Code for plotting the two beta distributions in Question (3)
+# ------------------------------------------------------------------
+
 # Function to plot Beta distribution
 plot_beta <- function(alpha, beta, title = "Beta Distribution", color = "blue", add = FALSE) {
   # Create a sequence of x values for plotting
@@ -20,10 +24,10 @@ plot_beta <- function(alpha, beta, title = "Beta Distribution", color = "blue", 
   }
 }
 
-# plot for n = 1000, overlaying the previous plot.
+# plot for n = 1000.
 plot_beta(alpha = 192, beta = 820, title = "Posterior Distributions", color = "red")
 
-# Plot for n = 100
+# Plot for n = 100, overlaying the previous plot.
 plot_beta(alpha = 21, beta = 91, color = "blue", add = TRUE)
 
 #add legend

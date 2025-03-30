@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.12.6)  29 MAR 2025 22:24
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.12.6)  30 MAR 2025 11:29
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -306,27 +306,37 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
 {C:/Users/utpal/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [1] [2]
-Overfull \hbox (53.12001pt too wide) detected at line 165
+Overfull \hbox (53.12001pt too wide) detected at line 166
 []
  []
 
 [3] [4]
-Overfull \hbox (31.44475pt too wide) detected at line 253
+Overfull \hbox (31.44475pt too wide) detected at line 254
 []
  []
 
 [5]
-Overfull \hbox (52.40105pt too wide) detected at line 273
+Overfull \hbox (30.31549pt too wide) detected at line 282
 []
  []
 
-[6]
-<Posterior_Distribution.png, id=39, 526.96875pt x 326.4195pt>
+[6] [7]
+<Posterior_Distribution.png, id=42, 526.96875pt x 326.4195pt>
 File: Posterior_Distribution.png Graphic file (type png)
 <use Posterior_Distribution.png>
-Package pdftex.def Info: Posterior_Distribution.png  used on input line 317.
+Package pdftex.def Info: Posterior_Distribution.png  used on input line 328.
 (pdftex.def)             Requested size: 304.92622pt x 188.8901pt.
- [7 <./Posterior_Distribution.png>] [8] [9] [10] [11] 
+ [8 <./Posterior_Distribution.png>]
+Overfull \hbox (13.07278pt too wide) detected at line 362
+[]
+ []
+
+
+Overfull \hbox (2.17986pt too wide) detected at line 392
+[]
+ []
+
+[9] [10] [11] 
 AED: lastpage setting LastPage
 [12] (Assignment 3.aux)
  ***********
@@ -337,13 +347,13 @@ L3 programming layer <2024-01-04>
 Here is how much of TeX's memory you used:
  5485 strings out of 474486
  82646 string characters out of 5743755
- 1950542 words of memory out of 5000000
+ 1953542 words of memory out of 5000000
  27708 multiletter control sequences out of 15000+600000
  567185 words of font info for 71 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 70i,16n,65p,477b,265s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 70i,16n,65p,471b,265s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\utpal\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/utpal/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/utpal/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/utpal/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/utpal/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex7.pfb><C:/Users/utpal/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/utpal/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/utpal/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/utpal/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/utpal/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/utpal/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/utpal/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/utpal/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/utpal/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/utpal/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/utpal/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/utpal/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on "Assignment 3.pdf" (13 pages, 232302 bytes).
+Output written on "Assignment 3.pdf" (13 pages, 235213 bytes).
 PDF statistics:
  132 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
