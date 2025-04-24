@@ -1,0 +1,9 @@
+*.aux
+*.synctex.gz
+
+# Ignore all log files
+*.log
+
+# Ignore environment folders
+env/
+venv/
